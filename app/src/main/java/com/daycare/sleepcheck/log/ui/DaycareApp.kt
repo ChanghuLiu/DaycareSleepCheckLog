@@ -1,8 +1,11 @@
 package com.daycare.sleepcheck.log.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
@@ -16,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.daycare.sleepcheck.log.R
 import com.daycare.sleepcheck.log.SleepUiState
 import com.daycare.sleepcheck.log.SleepViewModel
-import com.daycare.sleepcheck.log.UiMessage
 import com.daycare.sleepcheck.log.data.*
 import java.text.DateFormat
 import java.util.Date
@@ -115,31 +117,44 @@ fun DaycareApp(
     val confirmationLabel = stringResource(R.string.direct_visual_confirmation)
     val exceptionLabel = stringResource(R.string.exception_observation)
     val sleepingChildren = session?.let { current -> state.children.count { it.roomId == current.roomId } } ?: 0
+    val roomName = session?.let { current -> state.rooms.firstOrNull { it.id == current.roomId }?.name }.orEmpty()
     FormColumn(stringResource(R.string.due_check), session?.let { stringResource(R.string.interval_summary, it.intervalMinutes) }.orEmpty()) {
+        if (roomName.isNotBlank()) Text(stringResource(R.string.room_label, roomName), style = MaterialTheme.typography.titleMedium)
         Text(stringResource(R.string.whole_room_prompt))
         Text(stringResource(R.string.children_count, sleepingChildren), style = MaterialTheme.typography.titleMedium)
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.Top) {
             Checkbox(checked = confirmed, onCheckedChange = { confirmed = it }, modifier = Modifier.semantics { contentDescription = confirmationLabel })
-            Text(stringResource(R.string.direct_visual_confirmation))
+            Text(stringResource(R.string.direct_visual_confirmation), Modifier.weight(1f).padding(top = 12.dp))
         }
-        Row(verticalAlignment = Alignment.CenterVertically) { Checkbox(checked = exception, onCheckedChange = { exception = it }, modifier = Modifier.semantics { contentDescription = exceptionLabel }); Text(exceptionLabel) }
+        Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.Top) {
+            Checkbox(checked = exception, onCheckedChange = { exception = it }, modifier = Modifier.semantics { contentDescription = exceptionLabel })
+            Text(exceptionLabel, Modifier.weight(1f).padding(top = 12.dp))
+        }
         if (!exception) Text(stringResource(R.string.normal_observation))
         Field(R.string.notes_label, notes, singleLine = false) { notes = it }
         Button(onClick = { vm.completeCheck(id, exception, notes, confirmed) }, enabled = confirmed, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.complete_check)) }
         if (!confirmed) Text(stringResource(R.string.confirmation_required), color = MaterialTheme.colorScheme.error)
         OutlinedButton(onClick = onHistory, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.open_history)) }
-        if (session != null) OutlinedButton(onClick = { vm.closeSession(id) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.close_session)) }
+        if (session != null) {
+            HorizontalDivider()
+            OutlinedButton(onClick = { vm.closeSession(id) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.close_session)) }
+        }
     }
 }
 
 @Composable private fun HistoryScreen(state: SleepUiState, vm: SleepViewModel, onPdf: (String) -> Unit) {
     var correctionFor by remember { mutableStateOf<CheckRecordEntity?>(null) }
+    val defaultPdfFilename = stringResource(R.string.pdf_default_filename)
     LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        item { Button(onClick = { onPdf("sleep-check-history.pdf") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.export_pdf)) } }
+        item { Button(onClick = { onPdf(defaultPdfFilename) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.export_pdf)) } }
         if (state.history.isEmpty()) item { Text(stringResource(R.string.no_history)) }
         items(state.history) { record ->
+            val roomName = state.rooms.firstOrNull { it.id == record.roomId }?.name.orEmpty()
+            val staffName = state.staff.firstOrNull { it.id == record.staffId }?.name.orEmpty()
             Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(if (record.observationType == ObservationType.EXCEPTION.name) stringResource(R.string.exception_observation) else stringResource(R.string.normal_observation), style = MaterialTheme.typography.titleMedium)
+                if (roomName.isNotBlank()) Text(stringResource(R.string.room_label, roomName))
+                if (staffName.isNotBlank()) Text(stringResource(R.string.observed_by, staffName))
                 Text(if (record.isLate) stringResource(R.string.late_check) else stringResource(R.string.on_time_check))
                 Text(stringResource(R.string.recorded_times, time(record.scheduledAt), time(record.observedAt), time(record.recordedAt)), style = MaterialTheme.typography.bodySmall)
                 if (record.notes.isNotBlank()) Text(record.notes)
@@ -181,16 +196,17 @@ fun DaycareApp(
         Button(onClick = { vm.saveSettings(profile, interval.toIntOrNull()) }, enabled = interval.toIntOrNull()?.let { it > 0 } == true, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.save_settings)) }
         HorizontalDivider()
         Text(stringResource(R.string.reminders), style = MaterialTheme.typography.titleMedium)
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically) {
             Switch(checked = state.remindersEnabled, onCheckedChange = onReminderToggle)
-            Text(stringResource(R.string.enable_reminders))
+            Text(stringResource(R.string.enable_reminders), Modifier.weight(1f).padding(start = 12.dp))
         }
         Text(if (state.preciseRemindersAvailable) stringResource(R.string.precise_reminders_available) else stringResource(R.string.precise_reminders_unavailable))
         if (!state.preciseRemindersAvailable) OutlinedButton(onClick = onRequestPreciseReminders, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.open_precise_settings)) }
         if (state.remindersEnabled && !state.notificationsAllowed) Text(stringResource(R.string.notifications_unavailable), color = MaterialTheme.colorScheme.error)
         HorizontalDivider()
         Text(stringResource(R.string.backup_restore), style = MaterialTheme.typography.titleMedium)
-        Button(onClick = { backup("daycare-sleep-check-log.json") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.backup_data)) }
+        val backupFilename = stringResource(R.string.backup_default_filename)
+        Button(onClick = { backup(backupFilename) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.backup_data)) }
         OutlinedButton(onClick = { restore("application/json") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.restore_data)) }
     }
 }
@@ -207,11 +223,17 @@ fun DaycareApp(
     }
 }
 
-@Composable private fun FormColumn(title: String, subtitle: String?, content: @Composable ColumnScope.() -> Unit) { Column(Modifier.fillMaxSize().padding(20.dp).safeDrawingPadding(), verticalArrangement = Arrangement.spacedBy(12.dp), content = { Text(title, style = MaterialTheme.typography.headlineSmall); subtitle?.takeIf { it.isNotBlank() }?.let { Text(it) }; content() }) }
+@Composable private fun FormColumn(title: String, subtitle: String?, content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        Modifier.fillMaxSize().safeDrawingPadding().verticalScroll(rememberScrollState()).padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        content = { Text(title, style = MaterialTheme.typography.headlineSmall); subtitle?.takeIf { it.isNotBlank() }?.let { Text(it) }; content() },
+    )
+}
 @Composable private fun Field(label: Int, value: String, singleLine: Boolean = true, onValueChange: (String) -> Unit) { OutlinedTextField(value, onValueChange, label = { Text(stringResource(label)) }, singleLine = singleLine, modifier = Modifier.fillMaxWidth()) }
-@Composable private fun CheckRow(label: Int, checked: Boolean, onChecked: (Boolean) -> Unit) { Row(verticalAlignment = Alignment.CenterVertically) { Checkbox(checked, onChecked); Text(stringResource(label)) } }
+@Composable private fun CheckRow(label: Int, checked: Boolean, onChecked: (Boolean) -> Unit) { Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.Top) { Checkbox(checked, onChecked); Text(stringResource(label), Modifier.weight(1f).padding(top = 12.dp)) } }
 @Composable private fun NavButton(label: Int, onClick: () -> Unit) { OutlinedButton(onClick, Modifier.fillMaxWidth()) { Text(stringResource(label)) } }
-@Composable private fun ProfileChips(selected: JurisdictionProfile, onSelected: (JurisdictionProfile) -> Unit) { Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) { JurisdictionProfile.values().forEach { item -> FilterChip(selected = selected == item, onClick = { onSelected(item) }, label = { Text(profileLabel(item)) }) } } }
+@Composable private fun ProfileChips(selected: JurisdictionProfile, onSelected: (JurisdictionProfile) -> Unit) { Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) { JurisdictionProfile.values().forEach { item -> FilterChip(selected = selected == item, onClick = { onSelected(item) }, label = { Text(profileLabel(item)) }) } } }
 @Composable private fun profileNote(profile: JurisdictionProfile): String = when (profile) { JurisdictionProfile.ONTARIO -> stringResource(R.string.ontario_policy_note); JurisdictionProfile.CALIFORNIA -> stringResource(R.string.california_policy_note); JurisdictionProfile.CUSTOM -> stringResource(R.string.custom_policy_note) }
 @Composable private fun profileLabel(profile: JurisdictionProfile): String = when (profile) { JurisdictionProfile.ONTARIO -> stringResource(R.string.ontario); JurisdictionProfile.CALIFORNIA -> stringResource(R.string.california); JurisdictionProfile.CUSTOM -> stringResource(R.string.custom) }
 private fun time(value: Long): String = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(value))

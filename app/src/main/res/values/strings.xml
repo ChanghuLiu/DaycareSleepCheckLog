@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Daycare Sleep Check Log</string>
+    <string name="app_name" translatable="false">Daycare Sleep Check Log</string>
     <string name="setup_title">Set up your facility</string>
     <string name="setup_subtitle">All records stay on this device.</string>
     <string name="facility_name_label">Facility name</string>
@@ -93,7 +93,7 @@
     <string name="correction_history">Correction history</string>
     <string name="correction_entry">%1$s · %2$s</string>
     <string name="app_privacy">No login, ads, analytics, backend, camera, location or internet access.</string>
-    <string name="pdf_title">Daycare Sleep Check Log</string>
+    <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">LATE</string>
     <string name="pdf_on_time">ON TIME</string>
     <string name="pdf_normal">Normal</string>
@@ -107,4 +107,6 @@
     <string name="pdf_recorded_time">Recorded: %1$s</string>
     <string name="pdf_notes">Observations/exceptions: %1$s</string>
     <string name="pdf_no_records">No completed checks.</string>
+    <string name="pdf_default_filename" translatable="false">sleep-check-history.pdf</string>
+    <string name="backup_default_filename" translatable="false">daycare-sleep-check-log.json</string>
 </resources>
