@@ -1,0 +1,24 @@
+# Android/Gradle local state
+local.properties
+.gradle/
+build/
+app/build/
+**/build/
+
+# IDE and machine-local files
+.idea/
+*.iml
+.DS_Store
+
+# Signing material and credentials
+*.jks
+*.keystore
+*.p12
+*.pfx
+**/signing.properties
+**/credentials.properties
+**/*credentials*
+**/*secret*
+**/*secrets*
+**/.env
+**/.env.*
