@@ -13,6 +13,7 @@ class SleepRepository(private val db: AppDatabase) {
     val activeSessions = db.sleepDao().activeSessions()
     val history = db.sleepDao().history()
     val corrections = db.auditDao().corrections()
+    val checklist = db.checklistDao().observe(currentDate())
 
     suspend fun saveSetup(
         facilityName: String,
@@ -65,7 +66,9 @@ class SleepRepository(private val db: AppDatabase) {
 
     suspend fun closeSession(id: String) = db.sleepDao().closeSession(id)
     suspend fun saveChecklist(surface: Boolean, equipment: Boolean, gate: Boolean, staffId: String) {
-        val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+        val date = currentDate()
         db.checklistDao().save(PlaygroundChecklistEntity(UUID.randomUUID().toString(), date, surface, equipment, gate, System.currentTimeMillis(), staffId))
     }
+
+    private fun currentDate(): String = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
 }

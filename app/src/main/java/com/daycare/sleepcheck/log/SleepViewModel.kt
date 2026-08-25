@@ -9,6 +9,7 @@ import com.daycare.sleepcheck.log.domain.JurisdictionDefaults
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 data class SleepUiState(
@@ -19,6 +20,7 @@ data class SleepUiState(
     val activeSessions: List<SleepSessionEntity> = emptyList(),
     val history: List<CheckRecordEntity> = emptyList(),
     val corrections: List<CorrectionAuditEntity> = emptyList(),
+    val checklist: PlaygroundChecklistEntity? = null,
     val requestedSessionId: String? = null,
     val remindersEnabled: Boolean = false,
     val preciseRemindersAvailable: Boolean = false,
@@ -44,6 +46,7 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { repo.activeSessions.collect { update { copy(activeSessions = it) } } }
         viewModelScope.launch { repo.history.collect { update { copy(history = it) } } }
         viewModelScope.launch { repo.corrections.collect { update { copy(corrections = it) } } }
+        viewModelScope.launch { repo.checklist.collect { update { copy(checklist = it) } } }
     }
 
     private fun update(change: SleepUiState.() -> SleepUiState) { _uiState.value = _uiState.value.change() }
@@ -64,9 +67,28 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
     }
     fun closeSession(id: String) = launch { repo.closeSession(id); reminderScheduler.cancel(id) }
     fun saveChecklist(surface: Boolean, equipment: Boolean, gate: Boolean) = launch { _uiState.value.staff.firstOrNull()?.id?.let { repo.saveChecklist(surface, equipment, gate, it); update { copy(message = UiMessage.CHECKLIST_SAVED) } } }
-    fun backupTo(uri: Uri) = launch { BackupManager(getApplication<Application>().contentResolver, db).write(uri); update { copy(message = UiMessage.BACKUP_CREATED) } }
-    fun restoreFrom(uri: Uri) = launch { try { BackupManager(getApplication<Application>().contentResolver, db).restore(uri); update { copy(message = UiMessage.RESTORED) } } catch (_: Exception) { update { copy(message = UiMessage.INVALID_BACKUP) } } }
-    fun exportPdfTo(uri: Uri) = launch { PdfExporter(getApplication(), getApplication<Application>().contentResolver).write(uri, _uiState.value.history) }
+    fun backupTo(uri: Uri) = viewModelScope.launch(Dispatchers.IO) {
+        BackupManager(getApplication<Application>().contentResolver, db).write(uri)
+        update { copy(message = UiMessage.BACKUP_CREATED) }
+    }
+    fun restoreFrom(uri: Uri) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            BackupManager(getApplication<Application>().contentResolver, db).restore(uri)
+            update { copy(message = UiMessage.RESTORED) }
+        } catch (_: Exception) {
+            update { copy(message = UiMessage.INVALID_BACKUP) }
+        }
+    }
+    fun exportPdfTo(uri: Uri) = launch {
+        val state = _uiState.value
+        PdfExporter(getApplication(), getApplication<Application>().contentResolver).write(
+            uri,
+            state.facility,
+            state.rooms,
+            state.staff,
+            state.history,
+        )
+    }
     fun defaultInterval(profile: JurisdictionProfile): Int? = JurisdictionDefaults.intervalFor(profile)
     fun openSessionFromReminder(sessionId: String?) { if (!sessionId.isNullOrBlank()) update { copy(requestedSessionId = sessionId) } }
     fun clearRequestedSession() = update { copy(requestedSessionId = null) }

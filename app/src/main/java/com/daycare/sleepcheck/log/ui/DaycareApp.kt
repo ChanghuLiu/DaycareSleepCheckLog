@@ -196,8 +196,12 @@ fun DaycareApp(
 }
 
 @Composable private fun ChecklistScreen(state: SleepUiState, vm: SleepViewModel) {
-    var surface by rememberSaveable { mutableStateOf(false) }; var equipment by rememberSaveable { mutableStateOf(false) }; var gate by rememberSaveable { mutableStateOf(false) }
+    val saved = state.checklist
+    var surface by rememberSaveable(saved?.id) { mutableStateOf(saved?.surfaceSafe ?: false) }
+    var equipment by rememberSaveable(saved?.id) { mutableStateOf(saved?.equipmentSafe ?: false) }
+    var gate by rememberSaveable(saved?.id) { mutableStateOf(saved?.gateSafe ?: false) }
     FormColumn(stringResource(R.string.playground_checklist), null) {
+        if (saved != null) Text(stringResource(R.string.checklist_status_saved), style = MaterialTheme.typography.bodyMedium)
         CheckRow(R.string.checklist_item_surface, surface) { surface = it }; CheckRow(R.string.checklist_item_equipment, equipment) { equipment = it }; CheckRow(R.string.checklist_item_gate, gate) { gate = it }
         Button(onClick = { vm.saveChecklist(surface, equipment, gate) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.save_checklist)) }
     }

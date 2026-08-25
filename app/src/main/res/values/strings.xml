@@ -66,6 +66,7 @@
     <string name="checklist_item_surface">Play surface is clear and in good condition</string>
     <string name="checklist_item_equipment">Equipment is stable, intact and age appropriate</string>
     <string name="checklist_item_gate">Gates, fences and latches are secure</string>
+    <string name="checklist_status_saved">A checklist is saved for today.</string>
     <string name="save_checklist">Save checklist</string>
     <string name="checklist_saved">Checklist saved.</string>
     <string name="backup_restore">Backup and restore</string>
@@ -97,5 +98,13 @@
     <string name="pdf_on_time">ON TIME</string>
     <string name="pdf_normal">Normal</string>
     <string name="pdf_exception">Exception</string>
-    <string name="pdf_scheduled">Scheduled %1$d; observed %2$d; %3$s</string>
+    <string name="pdf_facility">Facility: %1$s</string>
+    <string name="pdf_room">Room: %1$s</string>
+    <string name="pdf_staff">Staff: %1$s</string>
+    <string name="pdf_status">Status: %1$s - %2$s</string>
+    <string name="pdf_scheduled_time">Scheduled: %1$s</string>
+    <string name="pdf_observed_time">Observed: %1$s</string>
+    <string name="pdf_recorded_time">Recorded: %1$s</string>
+    <string name="pdf_notes">Observations/exceptions: %1$s</string>
+    <string name="pdf_no_records">No completed checks.</string>
 </resources>

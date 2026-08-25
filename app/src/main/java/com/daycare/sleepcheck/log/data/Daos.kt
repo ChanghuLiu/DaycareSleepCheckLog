@@ -56,7 +56,7 @@ interface AuditDao {
 
 @Dao
 interface ChecklistDao {
-    @Query("SELECT * FROM playground_checklist WHERE checkDate = :date LIMIT 1") fun observe(date: String): Flow<PlaygroundChecklistEntity?>
+    @Query("SELECT * FROM playground_checklist WHERE checkDate = :date ORDER BY recordedAt DESC LIMIT 1") fun observe(date: String): Flow<PlaygroundChecklistEntity?>
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun save(item: PlaygroundChecklistEntity)
     @Query("SELECT * FROM playground_checklist") suspend fun all(): List<PlaygroundChecklistEntity>
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertForRestore(item: PlaygroundChecklistEntity)
