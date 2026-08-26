@@ -1,3 +1,21 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+private val releaseSigningPropertiesFile =
+    File(System.getProperty("user.home"), ".config/daycare-sleep-check-log/signing.properties")
+
+check(releaseSigningPropertiesFile.isFile) {
+    "Release signing requires the secure file at ${releaseSigningPropertiesFile.absolutePath}"
+}
+
+private val releaseSigningProperties = Properties().also { properties ->
+    FileInputStream(releaseSigningPropertiesFile).use(properties::load)
+}
+
+private fun requiredReleaseSigningProperty(name: String): String =
+    releaseSigningProperties.getProperty(name)?.takeIf { it.isNotBlank() }
+        ?: error("Missing release signing property: $name")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -14,6 +32,20 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        create("release") {
+            storeFile = file(requiredReleaseSigningProperty("storeFile"))
+            storePassword = requiredReleaseSigningProperty("storePassword")
+            keyAlias = requiredReleaseSigningProperty("keyAlias")
+            keyPassword = requiredReleaseSigningProperty("keyPassword")
+        }
+    }
+    buildTypes {
+        release {
+            isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions {
