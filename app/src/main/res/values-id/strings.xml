@@ -24,6 +24,15 @@
     <string name="complete_check">Selesaikan pemeriksaan</string>
     <string name="confirmation_required">Konfirmasi visual langsung diperlukan sebelum menyimpan.</string>
     <string name="check_saved">Pemeriksaan disimpan</string>
+    <string name="check_saved_next_due">Pemeriksaan disimpan. Pemeriksaan berikutnya pada %1$s.</string>
+    <string name="check_saved_reminder_failed">Pemeriksaan disimpan, tetapi pengingat berikutnya untuk %1$s tidak dapat dijadwalkan.</string>
+    <string name="check_due_now">Pemeriksaan harus dilakukan sekarang</string>
+    <string name="next_check_due_at">Pemeriksaan berikutnya pada %1$s</string>
+    <string name="check_saving">Menyimpan pemeriksaan…</string>
+    <string name="check_error_missing_staff">Tambahkan anggota staf sebelum menyelesaikan pemeriksaan.</string>
+    <string name="check_error_session_missing">Sesi tidur ini tidak lagi tersedia. Pemeriksaan tidak disimpan.</string>
+    <string name="check_error_confirmation">Konfirmasi visual langsung diperlukan sebelum menyimpan.</string>
+    <string name="check_error_save">Pemeriksaan tidak dapat disimpan. Tidak ada catatan yang ditambahkan.</string>
     <string name="late_check">Pemeriksaan terlambat</string>
     <string name="on_time_check">Tepat waktu</string>
     <string name="history">Riwayat inspektur</string>

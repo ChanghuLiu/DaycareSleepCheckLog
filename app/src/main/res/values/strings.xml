@@ -24,6 +24,15 @@
     <string name="complete_check">Complete check</string>
     <string name="confirmation_required">Direct visual confirmation is required before saving.</string>
     <string name="check_saved">Check saved</string>
+    <string name="check_saved_next_due">Check saved. Next check due at %1$s.</string>
+    <string name="check_saved_reminder_failed">Check saved, but the next reminder could not be scheduled for %1$s.</string>
+    <string name="check_due_now">Check due now</string>
+    <string name="next_check_due_at">Next check due at %1$s</string>
+    <string name="check_saving">Saving check…</string>
+    <string name="check_error_missing_staff">Add a staff member before completing a check.</string>
+    <string name="check_error_session_missing">This sleep session is no longer available. The check was not saved.</string>
+    <string name="check_error_confirmation">Direct visual confirmation is required before saving.</string>
+    <string name="check_error_save">The check could not be saved. No record was added.</string>
     <string name="late_check">Late check</string>
     <string name="on_time_check">On time</string>
     <string name="history">Inspector history</string>

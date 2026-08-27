@@ -24,6 +24,15 @@
     <string name="complete_check">Kontrolü tamamla</string>
     <string name="confirmation_required">Kaydetmeden önce doğrudan görsel kontrol onayı gerekir.</string>
     <string name="check_saved">Kontrol kaydedildi</string>
+    <string name="check_saved_next_due">Kontrol kaydedildi. Sonraki kontrol %1$s saatinde.</string>
+    <string name="check_saved_reminder_failed">Kontrol kaydedildi ancak %1$s için sonraki hatırlatıcı zamanlanamadı.</string>
+    <string name="check_due_now">Kontrol zamanı geldi</string>
+    <string name="next_check_due_at">Sonraki kontrol zamanı: %1$s</string>
+    <string name="check_saving">Kontrol kaydediliyor…</string>
+    <string name="check_error_missing_staff">Kontrolü tamamlamadan önce bir personel ekleyin.</string>
+    <string name="check_error_session_missing">Bu uyku oturumu artık kullanılamıyor. Kontrol kaydedilmedi.</string>
+    <string name="check_error_confirmation">Kaydetmeden önce doğrudan görsel doğrulama gerekir.</string>
+    <string name="check_error_save">Kontrol kaydedilemedi. Kayıt eklenmedi.</string>
     <string name="late_check">Geç kontrol</string>
     <string name="on_time_check">Zamanında</string>
     <string name="history">Denetçi geçmişi</string>

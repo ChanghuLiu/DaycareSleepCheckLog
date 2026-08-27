@@ -24,6 +24,15 @@
     <string name="complete_check">जाँच पूरी करें</string>
     <string name="confirmation_required">सहेजने से पहले सीधी दृश्य जाँच की पुष्टि आवश्यक है।</string>
     <string name="check_saved">जाँच सहेजी गई</string>
+    <string name="check_saved_next_due">जाँच सहेजी गई। अगली जाँच %1$s पर है।</string>
+    <string name="check_saved_reminder_failed">जाँच सहेजी गई, लेकिन %1$s के लिए अगला रिमाइंडर शेड्यूल नहीं हो सका।</string>
+    <string name="check_due_now">अभी जाँच करनी है</string>
+    <string name="next_check_due_at">अगली जाँच %1$s पर</string>
+    <string name="check_saving">जाँच सहेजी जा रही है…</string>
+    <string name="check_error_missing_staff">जाँच पूरी करने से पहले किसी स्टाफ सदस्य को जोड़ें।</string>
+    <string name="check_error_session_missing">यह स्लीप सेशन अब उपलब्ध नहीं है। जाँच सहेजी नहीं गई।</string>
+    <string name="check_error_confirmation">सहेजने से पहले प्रत्यक्ष दृश्य पुष्टि आवश्यक है।</string>
+    <string name="check_error_save">जाँच सहेजी नहीं जा सकी। कोई रिकॉर्ड नहीं जोड़ा गया।</string>
     <string name="late_check">देर से की गई जाँच</string>
     <string name="on_time_check">समय पर</string>
     <string name="history">निरीक्षक इतिहास</string>

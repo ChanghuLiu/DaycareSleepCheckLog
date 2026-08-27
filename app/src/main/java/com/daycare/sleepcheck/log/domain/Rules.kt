@@ -27,6 +27,10 @@ object CheckScheduling {
 
 class DirectVisualCheckRequired : IllegalArgumentException()
 
+class StaffRequired : IllegalStateException()
+
+class SleepSessionNotFound : IllegalStateException()
+
 object CheckCompletion {
     fun validate(directVisualCheckConfirmed: Boolean) {
         if (!directVisualCheckConfirmed) throw DirectVisualCheckRequired()

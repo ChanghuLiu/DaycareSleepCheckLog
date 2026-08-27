@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.daycare.sleepcheck.log.data.ReminderAlarmReceiver
 import com.daycare.sleepcheck.log.ui.DaycareApp
 import com.daycare.sleepcheck.log.ui.SleepCheckTheme
 
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.openSessionFromReminder(intent.getStringExtra(EXTRA_OPEN_SESSION_ID))
+        viewModel.openSessionFromReminder(intent.getStringExtra(EXTRA_OPEN_SESSION_ID), intent.hasExtra(ReminderAlarmReceiver.EXTRA_SCHEDULED_AT))
         viewModel.refreshReminderStatus()
         viewModel.reconcileReminders()
         setContent {
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        viewModel.openSessionFromReminder(intent.getStringExtra(EXTRA_OPEN_SESSION_ID))
+        viewModel.openSessionFromReminder(intent.getStringExtra(EXTRA_OPEN_SESSION_ID), intent.hasExtra(ReminderAlarmReceiver.EXTRA_SCHEDULED_AT))
     }
 
     override fun onResume() {

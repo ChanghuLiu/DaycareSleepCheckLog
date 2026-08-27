@@ -24,6 +24,15 @@
     <string name="complete_check">Terminer la vérification</string>
     <string name="confirmation_required">La confirmation visuelle directe est requise avant l’enregistrement.</string>
     <string name="check_saved">Vérification enregistrée</string>
+    <string name="check_saved_next_due">Vérification enregistrée. Prochaine vérification prévue à %1$s.</string>
+    <string name="check_saved_reminder_failed">Vérification enregistrée, mais le prochain rappel n’a pas pu être programmé pour %1$s.</string>
+    <string name="check_due_now">Vérification à effectuer maintenant</string>
+    <string name="next_check_due_at">Prochaine vérification prévue à %1$s</string>
+    <string name="check_saving">Enregistrement de la vérification…</string>
+    <string name="check_error_missing_staff">Ajoutez un membre du personnel avant de terminer une vérification.</string>
+    <string name="check_error_session_missing">Cette session de sommeil n’est plus disponible. La vérification n’a pas été enregistrée.</string>
+    <string name="check_error_confirmation">La confirmation visuelle directe est requise avant l’enregistrement.</string>
+    <string name="check_error_save">Impossible d’enregistrer la vérification. Aucun enregistrement n’a été ajouté.</string>
     <string name="late_check">Vérification en retard</string>
     <string name="on_time_check">À l’heure</string>
     <string name="history">Historique de l’inspecteur</string>

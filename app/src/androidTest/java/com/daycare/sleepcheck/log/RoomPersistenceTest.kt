@@ -5,9 +5,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.daycare.sleepcheck.log.data.*
+import com.daycare.sleepcheck.log.domain.ReminderScheduling
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,8 +25,16 @@ class RoomPersistenceTest {
         val room = db.peopleDao().allRooms().single()
         val staff = db.peopleDao().allStaff().single()
         val session = repo.startSession(room.id)
-        repo.completeCheck(session, staff.id, false, "", true, 1000)
+        val sessionEntity = db.sleepDao().session(session)!!
+        val completion = repo.completeCheck(session, staff.id, false, "Observed sleeping normally", true, sessionEntity.startedAt + 1)
         assertEquals(1, db.sleepDao().allRecords().size)
+        assertEquals(sessionEntity.startedAt, completion.record.scheduledAt)
+        assertEquals(sessionEntity.startedAt + 1, completion.record.observedAt)
+        assertEquals("Observed sleeping normally", completion.record.notes)
+        assertTrue(completion.record.directVisualCheckConfirmed)
+        assertTrue(completion.record.isLate)
+        assertEquals(ReminderScheduling.afterCompletedCheck(sessionEntity.startedAt, sessionEntity.intervalMinutes, 1), completion.nextScheduledAt)
+        assertTrue(db.sleepDao().session(session)!!.active)
         assertEquals("Test Daycare", db.facilityDao().get()?.name)
     }
 }

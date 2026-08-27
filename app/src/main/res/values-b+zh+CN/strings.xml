@@ -24,6 +24,15 @@
     <string name="complete_check">完成检查</string>
     <string name="confirmation_required">保存前必须确认已进行直接目视检查。</string>
     <string name="check_saved">检查已保存</string>
+    <string name="check_saved_next_due">检查已保存。下次检查时间为 %1$s。</string>
+    <string name="check_saved_reminder_failed">检查已保存，但无法安排 %1$s 的下一次提醒。</string>
+    <string name="check_due_now">现在需要检查</string>
+    <string name="next_check_due_at">下次检查时间：%1$s</string>
+    <string name="check_saving">正在保存检查…</string>
+    <string name="check_error_missing_staff">请先添加工作人员，再完成检查。</string>
+    <string name="check_error_session_missing">此睡眠会话已不可用。检查未保存。</string>
+    <string name="check_error_confirmation">保存前必须完成直接目视确认。</string>
+    <string name="check_error_save">无法保存检查。未添加任何记录。</string>
     <string name="late_check">延迟检查</string>
     <string name="on_time_check">按时</string>
     <string name="history">检查员历史记录</string>

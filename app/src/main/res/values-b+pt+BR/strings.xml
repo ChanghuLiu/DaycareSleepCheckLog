@@ -24,6 +24,15 @@
     <string name="complete_check">Concluir verificação</string>
     <string name="confirmation_required">A confirmação visual direta é necessária antes de salvar.</string>
     <string name="check_saved">Verificação salva</string>
+    <string name="check_saved_next_due">Verificação salva. Próxima verificação às %1$s.</string>
+    <string name="check_saved_reminder_failed">Verificação salva, mas não foi possível agendar o próximo lembrete para %1$s.</string>
+    <string name="check_due_now">Hora da verificação</string>
+    <string name="next_check_due_at">Próxima verificação às %1$s</string>
+    <string name="check_saving">Salvando verificação…</string>
+    <string name="check_error_missing_staff">Adicione um membro da equipe antes de concluir uma verificação.</string>
+    <string name="check_error_session_missing">Esta sessão de sono não está mais disponível. A verificação não foi salva.</string>
+    <string name="check_error_confirmation">A confirmação visual direta é necessária antes de salvar.</string>
+    <string name="check_error_save">Não foi possível salvar a verificação. Nenhum registro foi adicionado.</string>
     <string name="late_check">Verificação atrasada</string>
     <string name="on_time_check">No horário</string>
     <string name="history">Histórico do inspetor</string>

@@ -3,8 +3,10 @@ package com.daycare.sleepcheck.log
 import com.daycare.sleepcheck.log.data.JurisdictionProfile
 import com.daycare.sleepcheck.log.domain.CheckCompletion
 import com.daycare.sleepcheck.log.domain.CheckScheduling
+import com.daycare.sleepcheck.log.domain.CompletionSubmissionGate
 import com.daycare.sleepcheck.log.domain.DirectVisualCheckRequired
 import com.daycare.sleepcheck.log.domain.JurisdictionDefaults
+import com.daycare.sleepcheck.log.domain.ReminderScheduling
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -42,5 +44,20 @@ class RulesTest {
     @Test fun customRequiresASelectedInterval() {
         assertEquals(null, JurisdictionDefaults.intervalFor(JurisdictionProfile.CUSTOM))
         assertThrows(IllegalArgumentException::class.java) { JurisdictionDefaults.validateFacilityPolicyInterval(0) }
+    }
+
+    @Test fun completedCheckSchedulesTheNextCheckUsingTheSharedRules() {
+        assertEquals(
+            CheckScheduling.nextScheduledAt(1_000L, 15, 2),
+            ReminderScheduling.afterCompletedCheck(1_000L, 15, 2),
+        )
+    }
+
+    @Test fun rapidCompletionSubmissionsOnlyAllowOneInFlightAction() {
+        val gate = CompletionSubmissionGate()
+        assertTrue(gate.tryStart("session"))
+        assertFalse(gate.tryStart("session"))
+        gate.finish("session")
+        assertTrue(gate.tryStart("session"))
     }
 }

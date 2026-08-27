@@ -24,6 +24,15 @@
     <string name="complete_check">Completa controllo</string>
     <string name="confirmation_required">Prima di salvare è necessaria la conferma del controllo visivo diretto.</string>
     <string name="check_saved">Controllo salvato</string>
+    <string name="check_saved_next_due">Controllo salvato. Prossimo controllo previsto alle %1$s.</string>
+    <string name="check_saved_reminder_failed">Controllo salvato, ma non è stato possibile programmare il prossimo promemoria per le %1$s.</string>
+    <string name="check_due_now">Controllo previsto ora</string>
+    <string name="next_check_due_at">Prossimo controllo previsto alle %1$s</string>
+    <string name="check_saving">Salvataggio del controllo…</string>
+    <string name="check_error_missing_staff">Aggiungi un membro del personale prima di completare un controllo.</string>
+    <string name="check_error_session_missing">Questa sessione di sonno non è più disponibile. Il controllo non è stato salvato.</string>
+    <string name="check_error_confirmation">La conferma visiva diretta è necessaria prima del salvataggio.</string>
+    <string name="check_error_save">Impossibile salvare il controllo. Nessun record è stato aggiunto.</string>
     <string name="late_check">Controllo in ritardo</string>
     <string name="on_time_check">In orario</string>
     <string name="history">Cronologia dell’ispettore</string>

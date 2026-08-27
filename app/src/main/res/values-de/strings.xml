@@ -24,6 +24,15 @@
     <string name="complete_check">Kontrolle abschließen</string>
     <string name="confirmation_required">Vor dem Speichern ist eine Bestätigung der direkten visuellen Kontrolle erforderlich.</string>
     <string name="check_saved">Kontrolle gespeichert</string>
+    <string name="check_saved_next_due">Kontrolle gespeichert. Nächste Kontrolle um %1$s fällig.</string>
+    <string name="check_saved_reminder_failed">Kontrolle gespeichert, aber die nächste Erinnerung für %1$s konnte nicht geplant werden.</string>
+    <string name="check_due_now">Kontrolle jetzt fällig</string>
+    <string name="next_check_due_at">Nächste Kontrolle um %1$s fällig</string>
+    <string name="check_saving">Kontrolle wird gespeichert…</string>
+    <string name="check_error_missing_staff">Fügen Sie vor dem Abschluss eine Betreuungsperson hinzu.</string>
+    <string name="check_error_session_missing">Diese Schlafsitzung ist nicht mehr verfügbar. Die Kontrolle wurde nicht gespeichert.</string>
+    <string name="check_error_confirmation">Vor dem Speichern ist eine direkte visuelle Bestätigung erforderlich.</string>
+    <string name="check_error_save">Die Kontrolle konnte nicht gespeichert werden. Es wurde kein Eintrag hinzugefügt.</string>
     <string name="late_check">Verspätete Kontrolle</string>
     <string name="on_time_check">Pünktlich</string>
     <string name="history">Prüfverlauf</string>

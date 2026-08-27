@@ -24,6 +24,15 @@
     <string name="complete_check">Completar revisión</string>
     <string name="confirmation_required">Debes confirmar la revisión visual directa antes de guardar.</string>
     <string name="check_saved">Revisión guardada</string>
+    <string name="check_saved_next_due">Revisión guardada. La próxima revisión es a las %1$s.</string>
+    <string name="check_saved_reminder_failed">Revisión guardada, pero no se pudo programar el próximo recordatorio para las %1$s.</string>
+    <string name="check_due_now">Revisión pendiente ahora</string>
+    <string name="next_check_due_at">Próxima revisión a las %1$s</string>
+    <string name="check_saving">Guardando revisión…</string>
+    <string name="check_error_missing_staff">Añade a un miembro del personal antes de completar una revisión.</string>
+    <string name="check_error_session_missing">Esta sesión de sueño ya no está disponible. La revisión no se guardó.</string>
+    <string name="check_error_confirmation">Se requiere confirmación visual directa antes de guardar.</string>
+    <string name="check_error_save">No se pudo guardar la revisión. No se añadió ningún registro.</string>
     <string name="late_check">Revisión atrasada</string>
     <string name="on_time_check">A tiempo</string>
     <string name="history">Historial del inspector</string>

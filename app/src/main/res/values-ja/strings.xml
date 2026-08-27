@@ -24,6 +24,15 @@
     <string name="complete_check">チェックを完了</string>
     <string name="confirmation_required">保存する前に、直接目視確認を行ったことを確認してください。</string>
     <string name="check_saved">チェックを保存しました</string>
+    <string name="check_saved_next_due">チェックを保存しました。次回のチェックは%1$sです。</string>
+    <string name="check_saved_reminder_failed">チェックを保存しましたが、%1$sの次回リマインダーを設定できませんでした。</string>
+    <string name="check_due_now">今すぐチェックする時間です</string>
+    <string name="next_check_due_at">次回のチェック：%1$s</string>
+    <string name="check_saving">チェックを保存中…</string>
+    <string name="check_error_missing_staff">チェックを完了する前にスタッフを追加してください。</string>
+    <string name="check_error_session_missing">この睡眠セッションは利用できません。チェックは保存されませんでした。</string>
+    <string name="check_error_confirmation">保存するには直接目視確認が必要です。</string>
+    <string name="check_error_save">チェックを保存できませんでした。記録は追加されていません。</string>
     <string name="late_check">遅れたチェック</string>
     <string name="on_time_check">時間どおり</string>
     <string name="history">検査履歴</string>

@@ -61,8 +61,8 @@ class ReminderScheduler(private val context: Context) {
 
     suspend fun rescheduleSession(db: AppDatabase, sessionId: String) {
         if (!enabled) return
-        val session = db.sleepDao().session(sessionId) ?: return
-        if (!session.active) return
+        val session = db.sleepDao().session(sessionId) ?: error("Sleep session not found while scheduling reminder")
+        check(session.active) { "Sleep session is no longer active while scheduling reminder" }
         val count = db.sleepDao().recordsForSession(session.id).size
         val roomName = db.peopleDao().room(session.roomId)?.name ?: session.roomId
         val nextAt = ReminderScheduling.nextReminderAt(session.startedAt, session.intervalMinutes, count)

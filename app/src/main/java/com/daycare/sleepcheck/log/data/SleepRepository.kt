@@ -3,6 +3,8 @@ package com.daycare.sleepcheck.log.data
 import com.daycare.sleepcheck.log.domain.CheckCompletion
 import com.daycare.sleepcheck.log.domain.CheckScheduling
 import com.daycare.sleepcheck.log.domain.JurisdictionDefaults
+import com.daycare.sleepcheck.log.domain.ReminderScheduling
+import com.daycare.sleepcheck.log.domain.SleepSessionNotFound
 import java.util.UUID
 
 class SleepRepository(private val db: AppDatabase) {
@@ -52,12 +54,14 @@ class SleepRepository(private val db: AppDatabase) {
         return id
     }
 
-    suspend fun completeCheck(sessionId: String, staffId: String, exception: Boolean, notes: String, directVisualCheckConfirmed: Boolean, observedAt: Long = System.currentTimeMillis()): CheckRecordEntity {
+    suspend fun completeCheck(sessionId: String, staffId: String, exception: Boolean, notes: String, directVisualCheckConfirmed: Boolean, observedAt: Long = System.currentTimeMillis()): CheckCompletionResult {
         CheckCompletion.validate(directVisualCheckConfirmed)
-        val session = db.sleepDao().session(sessionId) ?: error("Sleep session not found")
+        val session = db.sleepDao().session(sessionId) ?: throw SleepSessionNotFound()
         val count = db.sleepDao().recordsForSession(sessionId).size
         val scheduled = CheckScheduling.nextScheduledAt(session.startedAt, session.intervalMinutes, count)
-        return CheckRecordEntity(UUID.randomUUID().toString(), sessionId, session.roomId, staffId, scheduled, observedAt, System.currentTimeMillis(), if (exception) ObservationType.EXCEPTION.name else ObservationType.NORMAL.name, notes, true, CheckScheduling.isLate(scheduled, observedAt)).also { db.sleepDao().insertRecord(it) }
+        val record = CheckRecordEntity(UUID.randomUUID().toString(), sessionId, session.roomId, staffId, scheduled, observedAt, System.currentTimeMillis(), if (exception) ObservationType.EXCEPTION.name else ObservationType.NORMAL.name, notes, true, CheckScheduling.isLate(scheduled, observedAt))
+        db.sleepDao().insertRecord(record)
+        return CheckCompletionResult(record, ReminderScheduling.afterCompletedCheck(session.startedAt, session.intervalMinutes, count + 1))
     }
 
     suspend fun addCorrection(record: CheckRecordEntity, reason: String, staffId: String, observedAt: Long?, notes: String?) {
@@ -72,3 +76,8 @@ class SleepRepository(private val db: AppDatabase) {
 
     private fun currentDate(): String = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
 }
+
+data class CheckCompletionResult(
+    val record: CheckRecordEntity,
+    val nextScheduledAt: Long,
+)

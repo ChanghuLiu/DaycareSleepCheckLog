@@ -24,6 +24,15 @@
     <string name="complete_check">Завершить проверку</string>
     <string name="confirmation_required">Перед сохранением необходимо подтвердить прямую визуальную проверку.</string>
     <string name="check_saved">Проверка сохранена</string>
+    <string name="check_saved_next_due">Проверка сохранена. Следующая проверка в %1$s.</string>
+    <string name="check_saved_reminder_failed">Проверка сохранена, но следующее напоминание на %1$s не удалось запланировать.</string>
+    <string name="check_due_now">Проверку нужно выполнить сейчас</string>
+    <string name="next_check_due_at">Следующая проверка в %1$s</string>
+    <string name="check_saving">Сохранение проверки…</string>
+    <string name="check_error_missing_staff">Добавьте сотрудника перед завершением проверки.</string>
+    <string name="check_error_session_missing">Эта сессия сна больше недоступна. Проверка не сохранена.</string>
+    <string name="check_error_confirmation">Перед сохранением необходимо подтвердить прямую визуальную проверку.</string>
+    <string name="check_error_save">Не удалось сохранить проверку. Запись не добавлена.</string>
     <string name="late_check">Проверка с опозданием</string>
     <string name="on_time_check">Вовремя</string>
     <string name="history">История инспектора</string>

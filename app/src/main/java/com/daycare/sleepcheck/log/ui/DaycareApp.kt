@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -19,11 +20,14 @@ import androidx.compose.ui.unit.dp
 import com.daycare.sleepcheck.log.R
 import com.daycare.sleepcheck.log.SleepUiState
 import com.daycare.sleepcheck.log.SleepViewModel
+import com.daycare.sleepcheck.log.UiMessage
+import com.daycare.sleepcheck.log.UiMessageType
 import com.daycare.sleepcheck.log.billing.BillingMessage
 import com.daycare.sleepcheck.log.billing.ProAccessPolicy
 import com.daycare.sleepcheck.log.billing.ProEntitlement
 import com.daycare.sleepcheck.log.billing.ProFeature
 import com.daycare.sleepcheck.log.data.*
+import com.daycare.sleepcheck.log.domain.ReminderScheduling
 import java.text.DateFormat
 import java.util.Date
 
@@ -44,9 +48,23 @@ fun DaycareApp(
 ) {
     var screen by rememberSaveable { mutableStateOf(if (state.facility == null) Screen.SETTINGS else Screen.HOME) }
     var sessionId by rememberSaveable { mutableStateOf<String?>(null) }
+    var sessionOpenedFromReminder by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val resources = LocalContext.current.resources
+    LaunchedEffect(Unit) {
+        vm.messages.collect { message ->
+            if (message.type == UiMessageType.CHECK_SAVED || message.type == UiMessageType.CHECK_SAVED_REMINDER_FAILED) {
+                sessionId = null
+                sessionOpenedFromReminder = false
+                screen = Screen.HOME
+            }
+            snackbarHostState.showSnackbar(uiMessageText(resources, message))
+        }
+    }
     LaunchedEffect(state.requestedSessionId, state.facility?.id) {
         state.requestedSessionId?.takeIf { state.facility != null }?.let {
             sessionId = it
+            sessionOpenedFromReminder = state.requestedSessionFromReminder
             screen = Screen.SESSION
             vm.clearRequestedSession()
         }
@@ -54,13 +72,16 @@ fun DaycareApp(
     if (state.facility == null) SetupScreen(vm)
     else {
         LaunchedEffect(state.facility.id) { if (screen == Screen.SETTINGS) screen = Screen.HOME }
-        Scaffold(topBar = { TopAppBar(title = { Text(titleFor(screen)) }, navigationIcon = { if (screen != Screen.HOME) TextButton(onClick = { screen = Screen.HOME }) { Text(stringResource(R.string.back)) } }) }) { padding ->
+        Scaffold(
+            topBar = { TopAppBar(title = { Text(titleFor(screen)) }, navigationIcon = { if (screen != Screen.HOME) TextButton(onClick = { screen = Screen.HOME }) { Text(stringResource(R.string.back)) } }) },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+        ) { padding ->
             Box(Modifier.padding(padding).fillMaxSize()) {
                 when (screen) {
-                    Screen.HOME -> HomeScreen(state, vm, onSession = { id -> sessionId = id; screen = Screen.SESSION }, onNavigate = { target ->
+                    Screen.HOME -> HomeScreen(state, vm, onSession = { id -> sessionId = id; sessionOpenedFromReminder = false; screen = Screen.SESSION }, onNavigate = { target ->
                         if (target == Screen.CHECKLIST && !ProAccessPolicy.canAccess(ProFeature.PLAYGROUND_SAFETY_LOG, state.proEntitlement, state.rooms.size)) screen = Screen.PRO else screen = target
                     })
-                    Screen.SESSION -> SessionScreen(state, vm, sessionId ?: "", onHistory = { screen = Screen.HISTORY })
+                    Screen.SESSION -> SessionScreen(state, vm, sessionId ?: "", sessionOpenedFromReminder, state.sessionFormResetVersion, onHistory = { screen = Screen.HISTORY })
                     Screen.HISTORY -> HistoryScreen(state, vm, onPdf = { if (ProAccessPolicy.canAccess(ProFeature.PDF_EXPORT, state.proEntitlement, state.rooms.size)) pdf(it) else screen = Screen.PRO }, onRequestPro = { screen = Screen.PRO })
                     Screen.PEOPLE -> PeopleScreen(state, vm, onRequestPro = { screen = Screen.PRO })
                     Screen.SETTINGS -> SettingsScreen(state, vm, backup, restore, onReminderToggle, onRequestPreciseReminders, onRequestPro = { screen = Screen.PRO })
@@ -70,7 +91,21 @@ fun DaycareApp(
             }
         }
     }
-    state.message?.let { LaunchedEffect(it) { vm.clearMessage() } }
+}
+
+private fun uiMessageText(resources: android.content.res.Resources, message: UiMessage): String = when (message.type) {
+    UiMessageType.SETUP_SAVED -> resources.getString(R.string.session_started)
+    UiMessageType.CHECK_SAVED -> resources.getString(R.string.check_saved_next_due, time(message.nextScheduledAt ?: System.currentTimeMillis()))
+    UiMessageType.CHECK_SAVED_REMINDER_FAILED -> resources.getString(R.string.check_saved_reminder_failed, time(message.nextScheduledAt ?: System.currentTimeMillis()))
+    UiMessageType.CORRECTION_SAVED -> resources.getString(R.string.correction_saved)
+    UiMessageType.CHECKLIST_SAVED -> resources.getString(R.string.checklist_saved)
+    UiMessageType.BACKUP_CREATED -> resources.getString(R.string.backup_created)
+    UiMessageType.RESTORED -> resources.getString(R.string.restore_complete)
+    UiMessageType.INVALID_BACKUP -> resources.getString(R.string.invalid_backup)
+    UiMessageType.MISSING_STAFF -> resources.getString(R.string.check_error_missing_staff)
+    UiMessageType.SESSION_MISSING -> resources.getString(R.string.check_error_session_missing)
+    UiMessageType.CONFIRMATION_REQUIRED -> resources.getString(R.string.check_error_confirmation)
+    UiMessageType.CHECK_SAVE_FAILED -> resources.getString(R.string.check_error_save)
 }
 
 @Composable private fun titleFor(screen: Screen): String = when (screen) {
@@ -121,15 +156,22 @@ fun DaycareApp(
     }
 }
 
-@Composable private fun SessionScreen(state: SleepUiState, vm: SleepViewModel, id: String, onHistory: () -> Unit) {
-    var confirmed by rememberSaveable(id) { mutableStateOf(false) }; var exception by rememberSaveable(id) { mutableStateOf(false) }; var notes by rememberSaveable(id) { mutableStateOf("") }
+@Composable private fun SessionScreen(state: SleepUiState, vm: SleepViewModel, id: String, openedFromReminder: Boolean, formResetKey: Long, onHistory: () -> Unit) {
+    var confirmed by rememberSaveable(id, formResetKey) { mutableStateOf(false) }; var exception by rememberSaveable(id, formResetKey) { mutableStateOf(false) }; var notes by rememberSaveable(id, formResetKey) { mutableStateOf("") }
     val session = state.activeSessions.firstOrNull { it.id == id }
+    val completing = id in state.completingSessionIds
     val confirmationLabel = stringResource(R.string.direct_visual_confirmation)
     val exceptionLabel = stringResource(R.string.exception_observation)
     val sleepingChildren = session?.let { current -> state.children.count { it.roomId == current.roomId } } ?: 0
     val roomName = session?.let { current -> state.rooms.firstOrNull { it.id == current.roomId }?.name }.orEmpty()
-    FormColumn(stringResource(R.string.due_check), session?.let { stringResource(R.string.interval_summary, it.intervalMinutes) }.orEmpty()) {
+    val nextScheduledAt = session?.let { current ->
+        ReminderScheduling.nextReminderAt(current.startedAt, current.intervalMinutes, state.history.count { it.sessionId == current.id })
+    }
+    val isDue = openedFromReminder || (nextScheduledAt?.let { it <= System.currentTimeMillis() } == true)
+    FormColumn(stringResource(R.string.whole_room_check), session?.let { stringResource(R.string.interval_summary, it.intervalMinutes) }.orEmpty()) {
         if (roomName.isNotBlank()) Text(stringResource(R.string.room_label, roomName), style = MaterialTheme.typography.titleMedium)
+        nextScheduledAt?.let { Text(stringResource(R.string.next_check_due_at, time(it)), style = MaterialTheme.typography.titleMedium) }
+        if (isDue) Text(stringResource(R.string.check_due_now), color = MaterialTheme.colorScheme.error)
         Text(stringResource(R.string.whole_room_prompt))
         Text(stringResource(R.string.children_count, sleepingChildren), style = MaterialTheme.typography.titleMedium)
         Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.Top) {
@@ -142,7 +184,14 @@ fun DaycareApp(
         }
         if (!exception) Text(stringResource(R.string.normal_observation))
         Field(R.string.notes_label, notes, singleLine = false) { notes = it }
-        Button(onClick = { vm.completeCheck(id, exception, notes, confirmed) }, enabled = confirmed, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.complete_check)) }
+        Button(onClick = { vm.completeCheck(id, exception, notes, confirmed) }, enabled = confirmed && !completing && session != null, modifier = Modifier.fillMaxWidth()) {
+            if (completing) {
+                CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                Text(stringResource(R.string.check_saving))
+            } else {
+                Text(stringResource(R.string.complete_check))
+            }
+        }
         if (!confirmed) Text(stringResource(R.string.confirmation_required), color = MaterialTheme.colorScheme.error)
         OutlinedButton(onClick = onHistory, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.open_history)) }
         if (session != null) {

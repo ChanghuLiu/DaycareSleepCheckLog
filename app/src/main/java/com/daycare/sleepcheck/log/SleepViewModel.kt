@@ -9,10 +9,17 @@ import com.daycare.sleepcheck.log.billing.BillingMessage
 import com.daycare.sleepcheck.log.billing.ProEntitlement
 import com.daycare.sleepcheck.log.billing.ProEntitlementRepository
 import com.daycare.sleepcheck.log.domain.JurisdictionDefaults
+import com.daycare.sleepcheck.log.domain.CompletionSubmissionGate
+import com.daycare.sleepcheck.log.domain.DirectVisualCheckRequired
+import com.daycare.sleepcheck.log.domain.SleepSessionNotFound
+import com.daycare.sleepcheck.log.domain.StaffRequired
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 data class SleepUiState(
@@ -25,16 +32,36 @@ data class SleepUiState(
     val corrections: List<CorrectionAuditEntity> = emptyList(),
     val checklist: PlaygroundChecklistEntity? = null,
     val requestedSessionId: String? = null,
+    val requestedSessionFromReminder: Boolean = false,
     val remindersEnabled: Boolean = false,
     val preciseRemindersAvailable: Boolean = false,
     val notificationsAllowed: Boolean = true,
-    val message: UiMessage? = null,
+    val completingSessionIds: Set<String> = emptySet(),
+    val sessionFormResetVersion: Long = 0L,
     val proEntitlement: ProEntitlement = ProEntitlement.CHECKING,
     val proPrice: String? = null,
     val billingMessage: BillingMessage? = null,
 )
 
-enum class UiMessage { SETUP_SAVED, CHECK_SAVED, CORRECTION_SAVED, CHECKLIST_SAVED, BACKUP_CREATED, RESTORED, INVALID_BACKUP }
+enum class UiMessageType {
+    SETUP_SAVED,
+    CHECK_SAVED,
+    CHECK_SAVED_REMINDER_FAILED,
+    CORRECTION_SAVED,
+    CHECKLIST_SAVED,
+    BACKUP_CREATED,
+    RESTORED,
+    INVALID_BACKUP,
+    MISSING_STAFF,
+    SESSION_MISSING,
+    CONFIRMATION_REQUIRED,
+    CHECK_SAVE_FAILED,
+}
+
+data class UiMessage(
+    val type: UiMessageType,
+    val nextScheduledAt: Long? = null,
+)
 
 class SleepViewModel(app: Application) : AndroidViewModel(app) {
     private val db = AppDatabase.create(app)
@@ -42,7 +69,10 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
     private val reminderScheduler = ReminderScheduler(app)
     private val proEntitlementRepository = ProEntitlementRepository(app)
     private val _uiState = MutableStateFlow(SleepUiState())
+    private val uiEvents = Channel<UiMessage>(Channel.BUFFERED)
+    private val completionSubmissionGate = CompletionSubmissionGate()
     val uiState: StateFlow<SleepUiState> = _uiState.asStateFlow()
+    val messages = uiEvents.receiveAsFlow()
 
     init {
         refreshReminderStatus()
@@ -61,33 +91,73 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun update(change: SleepUiState.() -> SleepUiState) { _uiState.value = _uiState.value.change() }
-    fun clearMessage() = update { copy(message = null) }
-    fun saveSetup(facility: String, room: String, staff: String, child: String, profile: JurisdictionProfile, interval: Int) = launch { repo.saveSetup(facility, room, staff, child, profile, interval); update { copy(message = UiMessage.SETUP_SAVED) } }
+    private fun postMessage(message: UiMessage) { uiEvents.trySend(message) }
+    fun saveSetup(facility: String, room: String, staff: String, child: String, profile: JurisdictionProfile, interval: Int) = launch { repo.saveSetup(facility, room, staff, child, profile, interval); postMessage(UiMessage(UiMessageType.SETUP_SAVED)) }
     fun saveSettings(profile: JurisdictionProfile, interval: Int?) = launch { repo.saveFacilitySettings(profile, interval); reminderScheduler.rescheduleAll(db); refreshReminderStatus() }
     fun addRoom(name: String) = launch { repo.addRoom(name) }
     fun addStaff(name: String) = launch { repo.addStaff(name) }
     fun addChild(roomId: String, name: String) = launch { repo.addChild(roomId, name) }
     fun startSession(roomId: String, onStarted: (String) -> Unit) = launch { val id = repo.startSession(roomId); reminderScheduler.rescheduleSession(db, id); onStarted(id) }
-    fun completeCheck(sessionId: String, exception: Boolean, notes: String, confirmed: Boolean) = launch {
-        val staff = _uiState.value.staff.firstOrNull()?.id ?: return@launch
-        try { repo.completeCheck(sessionId, staff, exception, notes, confirmed); reminderScheduler.rescheduleSession(db, sessionId); update { copy(message = UiMessage.CHECK_SAVED) } } catch (_: IllegalArgumentException) { }
+    fun completeCheck(sessionId: String, exception: Boolean, notes: String, confirmed: Boolean): Boolean {
+        if (!completionSubmissionGate.tryStart(sessionId)) return false
+        update { copy(completingSessionIds = completingSessionIds + sessionId) }
+        viewModelScope.launch {
+            try {
+                val staff = _uiState.value.staff.firstOrNull()?.id ?: throw StaffRequired()
+                val completion = repo.completeCheck(sessionId, staff, exception, notes, confirmed)
+                val reminderFailure = try {
+                    reminderScheduler.rescheduleSession(db, sessionId)
+                    false
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    true
+                }
+                update {
+                    copy(
+                        completingSessionIds = completingSessionIds - sessionId,
+                        sessionFormResetVersion = sessionFormResetVersion + 1,
+                    )
+                }
+                postMessage(
+                    UiMessage(
+                        if (reminderFailure) UiMessageType.CHECK_SAVED_REMINDER_FAILED else UiMessageType.CHECK_SAVED,
+                        completion.nextScheduledAt,
+                    ),
+                )
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                update { copy(completingSessionIds = completingSessionIds - sessionId) }
+                val type = when (error) {
+                    is StaffRequired -> UiMessageType.MISSING_STAFF
+                    is SleepSessionNotFound -> UiMessageType.SESSION_MISSING
+                    is DirectVisualCheckRequired -> UiMessageType.CONFIRMATION_REQUIRED
+                    else -> UiMessageType.CHECK_SAVE_FAILED
+                }
+                postMessage(UiMessage(type))
+            } finally {
+                completionSubmissionGate.finish(sessionId)
+            }
+        }
+        return true
     }
     fun addCorrection(record: CheckRecordEntity, reason: String, notes: String) = launch {
         val staff = _uiState.value.staff.firstOrNull()?.id ?: return@launch
-        repo.addCorrection(record, reason, staff, null, notes); update { copy(message = UiMessage.CORRECTION_SAVED) }
+        repo.addCorrection(record, reason, staff, null, notes); postMessage(UiMessage(UiMessageType.CORRECTION_SAVED))
     }
     fun closeSession(id: String) = launch { repo.closeSession(id); reminderScheduler.cancel(id) }
-    fun saveChecklist(surface: Boolean, equipment: Boolean, gate: Boolean) = launch { _uiState.value.staff.firstOrNull()?.id?.let { repo.saveChecklist(surface, equipment, gate, it); update { copy(message = UiMessage.CHECKLIST_SAVED) } } }
+    fun saveChecklist(surface: Boolean, equipment: Boolean, gate: Boolean) = launch { _uiState.value.staff.firstOrNull()?.id?.let { repo.saveChecklist(surface, equipment, gate, it); postMessage(UiMessage(UiMessageType.CHECKLIST_SAVED)) } }
     fun backupTo(uri: Uri) = viewModelScope.launch(Dispatchers.IO) {
         BackupManager(getApplication<Application>().contentResolver, db).write(uri)
-        update { copy(message = UiMessage.BACKUP_CREATED) }
+        postMessage(UiMessage(UiMessageType.BACKUP_CREATED))
     }
     fun restoreFrom(uri: Uri) = viewModelScope.launch(Dispatchers.IO) {
         try {
             BackupManager(getApplication<Application>().contentResolver, db).restore(uri)
-            update { copy(message = UiMessage.RESTORED) }
+            postMessage(UiMessage(UiMessageType.RESTORED))
         } catch (_: Exception) {
-            update { copy(message = UiMessage.INVALID_BACKUP) }
+            postMessage(UiMessage(UiMessageType.INVALID_BACKUP))
         }
     }
     fun exportPdfTo(uri: Uri) = launch {
@@ -101,8 +171,10 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
     fun defaultInterval(profile: JurisdictionProfile): Int? = JurisdictionDefaults.intervalFor(profile)
-    fun openSessionFromReminder(sessionId: String?) { if (!sessionId.isNullOrBlank()) update { copy(requestedSessionId = sessionId) } }
-    fun clearRequestedSession() = update { copy(requestedSessionId = null) }
+    fun openSessionFromReminder(sessionId: String?, fromReminder: Boolean = false) {
+        if (!sessionId.isNullOrBlank()) update { copy(requestedSessionId = sessionId, requestedSessionFromReminder = fromReminder) }
+    }
+    fun clearRequestedSession() = update { copy(requestedSessionId = null, requestedSessionFromReminder = false) }
     fun setRemindersEnabled(enabled: Boolean) = launch {
         if (!enabled) _uiState.value.activeSessions.forEach { reminderScheduler.cancel(it.id) }
         reminderScheduler.setEnabled(enabled)

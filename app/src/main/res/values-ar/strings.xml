@@ -24,6 +24,15 @@
     <string name="complete_check">إكمال الفحص</string>
     <string name="confirmation_required">يلزم تأكيد الفحص البصري المباشر قبل الحفظ.</string>
     <string name="check_saved">تم حفظ الفحص</string>
+    <string name="check_saved_next_due">تم حفظ الفحص. موعد الفحص التالي %1$s.</string>
+    <string name="check_saved_reminder_failed">تم حفظ الفحص، ولكن تعذرت جدولة التذكير التالي في %1$s.</string>
+    <string name="check_due_now">حان موعد الفحص الآن</string>
+    <string name="next_check_due_at">موعد الفحص التالي %1$s</string>
+    <string name="check_saving">جارٍ حفظ الفحص…</string>
+    <string name="check_error_missing_staff">أضف موظفًا قبل إكمال الفحص.</string>
+    <string name="check_error_session_missing">جلسة النوم هذه غير متاحة الآن. لم يُحفظ الفحص.</string>
+    <string name="check_error_confirmation">يجب تأكيد الفحص البصري المباشر قبل الحفظ.</string>
+    <string name="check_error_save">تعذر حفظ الفحص. لم تتم إضافة أي سجل.</string>
     <string name="late_check">فحص متأخر</string>
     <string name="on_time_check">في الموعد</string>
     <string name="history">سجل المفتش</string>

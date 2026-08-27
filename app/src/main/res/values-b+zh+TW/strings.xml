@@ -24,6 +24,15 @@
     <string name="complete_check">完成檢查</string>
     <string name="confirmation_required">儲存前必須確認已進行直接目視檢查。</string>
     <string name="check_saved">檢查已儲存</string>
+    <string name="check_saved_next_due">檢查已儲存。下次檢查時間為 %1$s。</string>
+    <string name="check_saved_reminder_failed">檢查已儲存，但無法安排 %1$s 的下一次提醒。</string>
+    <string name="check_due_now">現在需要檢查</string>
+    <string name="next_check_due_at">下次檢查時間：%1$s</string>
+    <string name="check_saving">正在儲存檢查…</string>
+    <string name="check_error_missing_staff">請先新增工作人員，再完成檢查。</string>
+    <string name="check_error_session_missing">此睡眠工作階段已無法使用。檢查未儲存。</string>
+    <string name="check_error_confirmation">儲存前必須完成直接目視確認。</string>
+    <string name="check_error_save">無法儲存檢查。未新增任何記錄。</string>
     <string name="late_check">延遲檢查</string>
     <string name="on_time_check">準時</string>
     <string name="history">檢查員歷史記錄</string>
