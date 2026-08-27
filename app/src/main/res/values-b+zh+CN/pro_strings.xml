@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">解锁 Daycare Pro</string>
+    <string name="pro_screen_subtitle">为有序、可供检查的托育记录提供完整工具。</string>
+    <string name="pro_benefit_unlimited_rooms">无限房间</string>
+    <string name="pro_benefit_unlimited_rooms_description">管理每个托育房间。</string>
+    <string name="pro_benefit_pdf">适合检查的 PDF 报告</string>
+    <string name="pro_benefit_pdf_description">导出包含时间戳和员工信息的清晰记录。</string>
+    <string name="pro_benefit_history">完整历史记录工具</string>
+    <string name="pro_benefit_history_description">快速搜索和筛选记录。</string>
+    <string name="pro_benefit_backup">备份与恢复</string>
+    <string name="pro_benefit_backup_description">按需保留手动副本。</string>
+    <string name="pro_benefit_playground">游乐场安全日志</string>
+    <string name="pro_benefit_playground_description">集中保存每日安全检查。</string>
+    <string name="pro_price_once">%1$s 一次性</string>
+    <string name="pro_lifetime_access">终身使用 · 无订阅</string>
+    <string name="pro_unlock_cta">解锁 Pro — %1$s</string>
+    <string name="pro_restore_purchase">恢复购买</string>
+    <string name="pro_footer">无订阅。无广告。您的托育记录保留在设备上。</string>
+    <string name="pro_price_unavailable">价格不可用</string>
+    <string name="pro_purchase_pending">购买处理中。Google Play 确认付款后将解锁 Pro。</string>
+    <string name="pro_purchase_canceled">购买已取消。</string>
+    <string name="pro_billing_unavailable">Google Play 结算暂不可用。连接后请重试。</string>
+    <string name="pro_purchase_failed">无法完成购买。您的记录未发生变化。</string>
+    <string name="pro_purchase_restored">已从 Google Play 恢复购买状态。</string>
+    <string name="pro_history_search">搜索历史记录</string>
+    <string name="pro_history_exceptions_only">仅异常</string>
+    <string name="pro_history_tools">解锁完整历史工具</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

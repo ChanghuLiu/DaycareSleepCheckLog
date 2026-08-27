@@ -92,7 +92,7 @@
     <string name="observed_by">Observed by %1$s</string>
     <string name="correction_history">Correction history</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">No login, ads, analytics, backend, camera, location or internet access.</string>
+    <string name="app_privacy">No account, login, ads, analytics, developer backend, camera or location access. Optional purchases are processed by Google Play.</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">LATE</string>
     <string name="pdf_on_time">ON TIME</string>

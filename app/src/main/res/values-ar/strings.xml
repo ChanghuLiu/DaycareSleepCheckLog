@@ -92,7 +92,7 @@
     <string name="observed_by">تمت ملاحظته بواسطة %1$s</string>
     <string name="correction_history">سجل التصحيحات</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">لا يوجد تسجيل دخول أو إعلانات أو تحليلات أو خادم خلفي أو كاميرا أو موقع أو وصول إلى الإنترنت.</string>
+    <string name="app_privacy">لا يوجد حساب أو تسجيل دخول أو إعلانات أو تحليلات أو خادم مطور أو كاميرا أو وصول إلى الموقع. تتم معالجة المشتريات الاختيارية بواسطة Google Play.</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">متأخر</string>
     <string name="pdf_on_time">في الموعد</string>

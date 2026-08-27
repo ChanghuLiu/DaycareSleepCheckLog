@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Daycare Pro のロックを解除</string>
+    <string name="pro_screen_subtitle">整理された検査対応の保育記録のための総合ツール。</string>
+    <string name="pro_benefit_unlimited_rooms">無制限の部屋</string>
+    <string name="pro_benefit_unlimited_rooms_description">すべての保育室を管理できます。</string>
+    <string name="pro_benefit_pdf">検査対応 PDF レポート</string>
+    <string name="pro_benefit_pdf_description">タイムスタンプとスタッフ情報付きで明確な記録を出力できます。</string>
+    <string name="pro_benefit_history">完全な履歴ツール</string>
+    <string name="pro_benefit_history_description">記録をすばやく検索、絞り込みできます。</string>
+    <string name="pro_benefit_backup">バックアップと復元</string>
+    <string name="pro_benefit_backup_description">必要なときに手動コピーを保存できます。</string>
+    <string name="pro_benefit_playground">遊び場安全ログ</string>
+    <string name="pro_benefit_playground_description">毎日の安全確認をまとめて管理できます。</string>
+    <string name="pro_price_once">%1$s（買い切り）</string>
+    <string name="pro_lifetime_access">生涯アクセス · サブスクリプションなし</string>
+    <string name="pro_unlock_cta">Pro を解除 — %1$s</string>
+    <string name="pro_restore_purchase">購入を復元</string>
+    <string name="pro_footer">サブスクリプションなし。広告なし。保育記録は端末に保存されます。</string>
+    <string name="pro_price_unavailable">価格を取得できません</string>
+    <string name="pro_purchase_pending">購入保留中です。Google Play が支払いを確認すると Pro が解除されます。</string>
+    <string name="pro_purchase_canceled">購入をキャンセルしました。</string>
+    <string name="pro_billing_unavailable">Google Play の請求を利用できません。接続してから再試行してください。</string>
+    <string name="pro_purchase_failed">購入を完了できませんでした。記録は変更されていません。</string>
+    <string name="pro_purchase_restored">Google Play から購入状態を復元しました。</string>
+    <string name="pro_history_search">履歴を検索</string>
+    <string name="pro_history_exceptions_only">例外のみ</string>
+    <string name="pro_history_tools">完全な履歴ツールを解除</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

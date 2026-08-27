@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Desbloquear Daycare Pro</string>
+    <string name="pro_screen_subtitle">Herramientas completas para registros de cuidado infantil organizados y listos para inspección.</string>
+    <string name="pro_benefit_unlimited_rooms">Habitaciones ilimitadas</string>
+    <string name="pro_benefit_unlimited_rooms_description">Gestiona todas las habitaciones infantiles.</string>
+    <string name="pro_benefit_pdf">Informes PDF listos para inspección</string>
+    <string name="pro_benefit_pdf_description">Exporta registros claros con marcas de tiempo y contexto del personal.</string>
+    <string name="pro_benefit_history">Herramientas completas del historial</string>
+    <string name="pro_benefit_history_description">Busca y filtra registros rápidamente.</string>
+    <string name="pro_benefit_backup">Copia de seguridad y restauración</string>
+    <string name="pro_benefit_backup_description">Conserva una copia manual cuando quieras.</string>
+    <string name="pro_benefit_playground">Registro de seguridad del patio</string>
+    <string name="pro_benefit_playground_description">Mantén juntas las comprobaciones diarias de seguridad.</string>
+    <string name="pro_price_once">%1$s una vez</string>
+    <string name="pro_lifetime_access">Acceso de por vida · Sin suscripción</string>
+    <string name="pro_unlock_cta">Desbloquear Pro — %1$s</string>
+    <string name="pro_restore_purchase">Restaurar compra</string>
+    <string name="pro_footer">Sin suscripción. Sin anuncios. Tus registros permanecen en tu dispositivo.</string>
+    <string name="pro_price_unavailable">Precio no disponible</string>
+    <string name="pro_purchase_pending">Compra pendiente. Pro se desbloqueará cuando Google Play confirme el pago.</string>
+    <string name="pro_purchase_canceled">Compra cancelada.</string>
+    <string name="pro_billing_unavailable">La facturación de Google Play no está disponible ahora. Inténtalo al conectarte.</string>
+    <string name="pro_purchase_failed">No se pudo completar la compra. Tus registros no cambiaron.</string>
+    <string name="pro_purchase_restored">Estado de compra restaurado desde Google Play.</string>
+    <string name="pro_history_search">Buscar en el historial</string>
+    <string name="pro_history_exceptions_only">Solo excepciones</string>
+    <string name="pro_history_tools">Desbloquear herramientas completas del historial</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

@@ -92,7 +92,7 @@
     <string name="observed_by">觀察人員：%1$s</string>
     <string name="correction_history">更正歷史</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">無登入、廣告、分析、後端、相機、位置或網際網路存取。</string>
+    <string name="app_privacy">無帳戶、登入、廣告、分析、開發者後端、相機或位置存取。選擇性購買由 Google Play 處理。</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">延遲</string>
     <string name="pdf_on_time">準時</string>

@@ -92,7 +92,7 @@
     <string name="observed_by">Gözlemleyen: %1$s</string>
     <string name="correction_history">Düzeltme geçmişi</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">Giriş, reklam, analiz, arka uç, kamera, konum veya internet erişimi yoktur.</string>
+    <string name="app_privacy">Hesap, giriş, reklam, analiz, geliştirici arka ucu, kamera veya konum erişimi yoktur. İsteğe bağlı satın alımlar Google Play tarafından işlenir.</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">GEÇ</string>
     <string name="pdf_on_time">ZAMANINDA</string>

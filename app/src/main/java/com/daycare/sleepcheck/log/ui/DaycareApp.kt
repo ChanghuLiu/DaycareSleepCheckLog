@@ -19,11 +19,15 @@ import androidx.compose.ui.unit.dp
 import com.daycare.sleepcheck.log.R
 import com.daycare.sleepcheck.log.SleepUiState
 import com.daycare.sleepcheck.log.SleepViewModel
+import com.daycare.sleepcheck.log.billing.BillingMessage
+import com.daycare.sleepcheck.log.billing.ProAccessPolicy
+import com.daycare.sleepcheck.log.billing.ProEntitlement
+import com.daycare.sleepcheck.log.billing.ProFeature
 import com.daycare.sleepcheck.log.data.*
 import java.text.DateFormat
 import java.util.Date
 
-private enum class Screen { HOME, SESSION, HISTORY, PEOPLE, SETTINGS, CHECKLIST }
+private enum class Screen { HOME, SESSION, HISTORY, PEOPLE, SETTINGS, CHECKLIST, PRO }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +39,8 @@ fun DaycareApp(
     pdf: (String) -> Unit,
     onReminderToggle: (Boolean) -> Unit,
     onRequestPreciseReminders: () -> Unit,
+    onPurchasePro: () -> Unit,
+    onRestorePro: () -> Unit,
 ) {
     var screen by rememberSaveable { mutableStateOf(if (state.facility == null) Screen.SETTINGS else Screen.HOME) }
     var sessionId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -51,17 +57,20 @@ fun DaycareApp(
         Scaffold(topBar = { TopAppBar(title = { Text(titleFor(screen)) }, navigationIcon = { if (screen != Screen.HOME) TextButton(onClick = { screen = Screen.HOME }) { Text(stringResource(R.string.back)) } }) }) { padding ->
             Box(Modifier.padding(padding).fillMaxSize()) {
                 when (screen) {
-                    Screen.HOME -> HomeScreen(state, vm, onSession = { id -> sessionId = id; screen = Screen.SESSION }, onNavigate = { screen = it })
+                    Screen.HOME -> HomeScreen(state, vm, onSession = { id -> sessionId = id; screen = Screen.SESSION }, onNavigate = { target ->
+                        if (target == Screen.CHECKLIST && !ProAccessPolicy.canAccess(ProFeature.PLAYGROUND_SAFETY_LOG, state.proEntitlement, state.rooms.size)) screen = Screen.PRO else screen = target
+                    })
                     Screen.SESSION -> SessionScreen(state, vm, sessionId ?: "", onHistory = { screen = Screen.HISTORY })
-                    Screen.HISTORY -> HistoryScreen(state, vm, onPdf = pdf)
-                    Screen.PEOPLE -> PeopleScreen(state, vm)
-                    Screen.SETTINGS -> SettingsScreen(state, vm, backup, restore, onReminderToggle, onRequestPreciseReminders)
+                    Screen.HISTORY -> HistoryScreen(state, vm, onPdf = { if (ProAccessPolicy.canAccess(ProFeature.PDF_EXPORT, state.proEntitlement, state.rooms.size)) pdf(it) else screen = Screen.PRO }, onRequestPro = { screen = Screen.PRO })
+                    Screen.PEOPLE -> PeopleScreen(state, vm, onRequestPro = { screen = Screen.PRO })
+                    Screen.SETTINGS -> SettingsScreen(state, vm, backup, restore, onReminderToggle, onRequestPreciseReminders, onRequestPro = { screen = Screen.PRO })
                     Screen.CHECKLIST -> ChecklistScreen(state, vm)
+                    Screen.PRO -> ProScreen(state, onPurchasePro, onRestorePro)
                 }
             }
         }
     }
-    state.message?.let { message -> LaunchedEffect(message) { vm.clearMessage() } }
+    state.message?.let { LaunchedEffect(it) { vm.clearMessage() } }
 }
 
 @Composable private fun titleFor(screen: Screen): String = when (screen) {
@@ -71,6 +80,7 @@ fun DaycareApp(
     Screen.PEOPLE -> stringResource(R.string.people)
     Screen.SETTINGS -> stringResource(R.string.settings)
     Screen.CHECKLIST -> stringResource(R.string.playground_checklist)
+    Screen.PRO -> stringResource(R.string.pro_screen_title)
 }
 
 @Composable private fun SetupScreen(vm: SleepViewModel) {
@@ -142,13 +152,28 @@ fun DaycareApp(
     }
 }
 
-@Composable private fun HistoryScreen(state: SleepUiState, vm: SleepViewModel, onPdf: (String) -> Unit) {
+@Composable private fun HistoryScreen(state: SleepUiState, vm: SleepViewModel, onPdf: (String) -> Unit, onRequestPro: () -> Unit) {
     var correctionFor by remember { mutableStateOf<CheckRecordEntity?>(null) }
+    var search by rememberSaveable { mutableStateOf("") }
+    var exceptionsOnly by rememberSaveable { mutableStateOf(false) }
     val defaultPdfFilename = stringResource(R.string.pdf_default_filename)
+    val advancedAvailable = ProAccessPolicy.canAccess(ProFeature.ADVANCED_HISTORY, state.proEntitlement, state.rooms.size)
+    val visibleHistory = if (!advancedAvailable) state.history else state.history.filter { record ->
+        (!exceptionsOnly || record.observationType == ObservationType.EXCEPTION.name) &&
+            (search.isBlank() || record.notes.contains(search, ignoreCase = true) || state.rooms.firstOrNull { it.id == record.roomId }?.name?.contains(search, ignoreCase = true) == true)
+    }
     LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item { Button(onClick = { onPdf(defaultPdfFilename) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.export_pdf)) } }
-        if (state.history.isEmpty()) item { Text(stringResource(R.string.no_history)) }
-        items(state.history) { record ->
+        item {
+            if (advancedAvailable) {
+                OutlinedTextField(search, { search = it }, label = { Text(stringResource(R.string.pro_history_search)) }, modifier = Modifier.fillMaxWidth())
+                FilterChip(selected = exceptionsOnly, onClick = { exceptionsOnly = !exceptionsOnly }, label = { Text(stringResource(R.string.pro_history_exceptions_only)) })
+            } else {
+                OutlinedButton(onClick = onRequestPro, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.pro_history_tools)) }
+            }
+        }
+        if (visibleHistory.isEmpty()) item { Text(stringResource(R.string.no_history)) }
+        items(visibleHistory) { record ->
             val roomName = state.rooms.firstOrNull { it.id == record.roomId }?.name.orEmpty()
             val staffName = state.staff.firstOrNull { it.id == record.staffId }?.name.orEmpty()
             Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -172,10 +197,10 @@ fun DaycareApp(
     AlertDialog(onDismissRequest = onDismiss, title = { Text(stringResource(R.string.correction)) }, text = { Column(verticalArrangement = Arrangement.spacedBy(8.dp)) { Field(R.string.correction_reason, reason) { reason = it }; Field(R.string.notes_label, notes) { notes = it } } }, confirmButton = { TextButton(onClick = { onSave(reason, notes) }, enabled = reason.isNotBlank()) { Text(stringResource(R.string.save_correction)) } }, dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } })
 }
 
-@Composable private fun PeopleScreen(state: SleepUiState, vm: SleepViewModel) {
+@Composable private fun PeopleScreen(state: SleepUiState, vm: SleepViewModel, onRequestPro: () -> Unit) {
     var room by rememberSaveable { mutableStateOf("") }; var staff by rememberSaveable { mutableStateOf("") }; var child by rememberSaveable { mutableStateOf("") }
     LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        item { Field(R.string.add_room, room) { room = it }; Button(onClick = { if (room.isNotBlank()) { vm.addRoom(room); room = "" } }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.add_room)) } }
+        item { Field(R.string.add_room, room) { room = it }; Button(onClick = { if (room.isNotBlank()) { if (ProAccessPolicy.canAccess(ProFeature.SECOND_ROOM, state.proEntitlement, state.rooms.size)) { vm.addRoom(room); room = "" } else onRequestPro() } }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.add_room)) } }
         items(state.rooms) { Text(it.name) }
         item { Field(R.string.add_staff, staff) { staff = it }; Button(onClick = { if (staff.isNotBlank()) { vm.addStaff(staff); staff = "" } }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.add_staff)) } }
         items(state.staff) { Text(it.name) }
@@ -184,7 +209,7 @@ fun DaycareApp(
     }
 }
 
-@Composable private fun SettingsScreen(state: SleepUiState, vm: SleepViewModel, backup: (String) -> Unit, restore: (String) -> Unit, onReminderToggle: (Boolean) -> Unit, onRequestPreciseReminders: () -> Unit) {
+@Composable private fun SettingsScreen(state: SleepUiState, vm: SleepViewModel, backup: (String) -> Unit, restore: (String) -> Unit, onReminderToggle: (Boolean) -> Unit, onRequestPreciseReminders: () -> Unit, onRequestPro: () -> Unit) {
     val current = state.facility ?: return
     var profile by rememberSaveable(current.jurisdiction) { mutableStateOf(runCatching { JurisdictionProfile.valueOf(current.jurisdiction) }.getOrDefault(JurisdictionProfile.CUSTOM)) }
     var interval by rememberSaveable(current.intervalMinutes) { mutableStateOf(current.intervalMinutes.takeIf { it > 0 }?.toString().orEmpty()) }
@@ -204,10 +229,12 @@ fun DaycareApp(
         if (!state.preciseRemindersAvailable) OutlinedButton(onClick = onRequestPreciseReminders, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.open_precise_settings)) }
         if (state.remindersEnabled && !state.notificationsAllowed) Text(stringResource(R.string.notifications_unavailable), color = MaterialTheme.colorScheme.error)
         HorizontalDivider()
+        Button(onClick = onRequestPro, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.open_daycare_pro)) }
+        HorizontalDivider()
         Text(stringResource(R.string.backup_restore), style = MaterialTheme.typography.titleMedium)
         val backupFilename = stringResource(R.string.backup_default_filename)
-        Button(onClick = { backup(backupFilename) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.backup_data)) }
-        OutlinedButton(onClick = { restore("application/json") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.restore_data)) }
+        Button(onClick = { if (state.proEntitlement == ProEntitlement.PRO) backup(backupFilename) else onRequestPro() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.backup_data)) }
+        OutlinedButton(onClick = { if (state.proEntitlement == ProEntitlement.PRO) restore("application/json") else onRequestPro() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.restore_data)) }
     }
 }
 
@@ -220,6 +247,46 @@ fun DaycareApp(
         if (saved != null) Text(stringResource(R.string.checklist_status_saved), style = MaterialTheme.typography.bodyMedium)
         CheckRow(R.string.checklist_item_surface, surface) { surface = it }; CheckRow(R.string.checklist_item_equipment, equipment) { equipment = it }; CheckRow(R.string.checklist_item_gate, gate) { gate = it }
         Button(onClick = { vm.saveChecklist(surface, equipment, gate) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.save_checklist)) }
+    }
+}
+
+@Composable
+private fun ProScreen(state: SleepUiState, onPurchase: () -> Unit, onRestore: () -> Unit) {
+    val price = state.proPrice ?: stringResource(R.string.pro_price_unavailable)
+    val billingMessage = state.billingMessage
+    FormColumn(stringResource(R.string.pro_screen_title), stringResource(R.string.pro_screen_subtitle)) {
+        ProBenefit(R.string.pro_benefit_unlimited_rooms, R.string.pro_benefit_unlimited_rooms_description)
+        ProBenefit(R.string.pro_benefit_pdf, R.string.pro_benefit_pdf_description)
+        ProBenefit(R.string.pro_benefit_history, R.string.pro_benefit_history_description)
+        ProBenefit(R.string.pro_benefit_backup, R.string.pro_benefit_backup_description)
+        ProBenefit(R.string.pro_benefit_playground, R.string.pro_benefit_playground_description)
+        HorizontalDivider()
+        Text(stringResource(R.string.pro_price_once, price), style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.pro_lifetime_access))
+        Button(onClick = onPurchase, enabled = state.proEntitlement != ProEntitlement.PRO && state.proPrice != null, modifier = Modifier.fillMaxWidth()) {
+            Text(stringResource(R.string.pro_unlock_cta, price))
+        }
+        OutlinedButton(onClick = onRestore, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.pro_restore_purchase)) }
+        Text(stringResource(R.string.pro_footer), style = MaterialTheme.typography.bodySmall)
+        billingMessage?.let { message ->
+            Text(
+                when (message) {
+                    BillingMessage.PURCHASE_PENDING -> stringResource(R.string.pro_purchase_pending)
+                    BillingMessage.PURCHASE_CANCELED -> stringResource(R.string.pro_purchase_canceled)
+                    BillingMessage.BILLING_UNAVAILABLE -> stringResource(R.string.pro_billing_unavailable)
+                    BillingMessage.PURCHASE_FAILED -> stringResource(R.string.pro_purchase_failed)
+                    BillingMessage.PURCHASE_RESTORED -> stringResource(R.string.pro_purchase_restored)
+                },
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+    }
+}
+
+@Composable private fun ProBenefit(title: Int, description: Int) {
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(stringResource(title), style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(description))
     }
 }
 

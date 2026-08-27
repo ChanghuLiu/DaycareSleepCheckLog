@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Daycare Pro’nun Kilidini Aç</string>
+    <string name="pro_screen_subtitle">Düzenli ve denetime hazır çocuk bakım kayıtları için eksiksiz araçlar.</string>
+    <string name="pro_benefit_unlimited_rooms">Sınırsız oda</string>
+    <string name="pro_benefit_unlimited_rooms_description">Her çocuk bakım odasını yönetin.</string>
+    <string name="pro_benefit_pdf">Denetime hazır PDF raporları</string>
+    <string name="pro_benefit_pdf_description">Zaman damgaları ve personel bilgileriyle net kayıtlar dışa aktarın.</string>
+    <string name="pro_benefit_history">Tam geçmiş araçları</string>
+    <string name="pro_benefit_history_description">Kayıtları hızla arayın ve filtreleyin.</string>
+    <string name="pro_benefit_backup">Yedekleme ve geri yükleme</string>
+    <string name="pro_benefit_backup_description">İstediğiniz zaman manuel bir kopya saklayın.</string>
+    <string name="pro_benefit_playground">Oyun alanı güvenlik günlüğü</string>
+    <string name="pro_benefit_playground_description">Günlük güvenlik kontrollerini birlikte tutun.</string>
+    <string name="pro_price_once">%1$s tek seferlik</string>
+    <string name="pro_lifetime_access">Ömür boyu erişim · Abonelik yok</string>
+    <string name="pro_unlock_cta">Pro’nun kilidini aç — %1$s</string>
+    <string name="pro_restore_purchase">Satın almayı geri yükle</string>
+    <string name="pro_footer">Abonelik yok. Reklam yok. Çocuk bakım kayıtlarınız cihazınızda kalır.</string>
+    <string name="pro_price_unavailable">Fiyat kullanılamıyor</string>
+    <string name="pro_purchase_pending">Satın alma beklemede. Google Play ödemeyi onaylayınca Pro açılır.</string>
+    <string name="pro_purchase_canceled">Satın alma iptal edildi.</string>
+    <string name="pro_billing_unavailable">Google Play faturalandırması şu anda kullanılamıyor. Bağlandığınızda tekrar deneyin.</string>
+    <string name="pro_purchase_failed">Satın alma tamamlanamadı. Kayıtlarınız değiştirilmedi.</string>
+    <string name="pro_purchase_restored">Satın alma durumu Google Play’den geri yüklendi.</string>
+    <string name="pro_history_search">Geçmişte ara</string>
+    <string name="pro_history_exceptions_only">Yalnızca istisnalar</string>
+    <string name="pro_history_tools">Tam geçmiş araçlarının kilidini aç</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

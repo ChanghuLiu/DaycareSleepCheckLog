@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Sblocca Daycare Pro</string>
+    <string name="pro_screen_subtitle">Strumenti completi per registri di assistenza all’infanzia ordinati e pronti per l’ispezione.</string>
+    <string name="pro_benefit_unlimited_rooms">Stanze illimitate</string>
+    <string name="pro_benefit_unlimited_rooms_description">Gestisci ogni stanza per l’infanzia.</string>
+    <string name="pro_benefit_pdf">Report PDF pronti per l’ispezione</string>
+    <string name="pro_benefit_pdf_description">Esporta registri chiari con timestamp e contesto del personale.</string>
+    <string name="pro_benefit_history">Strumenti completi della cronologia</string>
+    <string name="pro_benefit_history_description">Cerca e filtra rapidamente i registri.</string>
+    <string name="pro_benefit_backup">Backup e ripristino</string>
+    <string name="pro_benefit_backup_description">Conserva una copia manuale quando vuoi.</string>
+    <string name="pro_benefit_playground">Registro sicurezza area giochi</string>
+    <string name="pro_benefit_playground_description">Raccogli i controlli di sicurezza quotidiani.</string>
+    <string name="pro_price_once">%1$s una volta</string>
+    <string name="pro_lifetime_access">Accesso a vita · Nessun abbonamento</string>
+    <string name="pro_unlock_cta">Sblocca Pro — %1$s</string>
+    <string name="pro_restore_purchase">Ripristina acquisto</string>
+    <string name="pro_footer">Nessun abbonamento. Nessuna pubblicità. I tuoi registri restano sul dispositivo.</string>
+    <string name="pro_price_unavailable">Prezzo non disponibile</string>
+    <string name="pro_purchase_pending">Acquisto in sospeso. Pro si sblocca dopo la conferma del pagamento da parte di Google Play.</string>
+    <string name="pro_purchase_canceled">Acquisto annullato.</string>
+    <string name="pro_billing_unavailable">La fatturazione Google Play non è disponibile. Riprova quando sei connesso.</string>
+    <string name="pro_purchase_failed">Impossibile completare l’acquisto. I registri non sono stati modificati.</string>
+    <string name="pro_purchase_restored">Stato dell’acquisto ripristinato da Google Play.</string>
+    <string name="pro_history_search">Cerca nella cronologia</string>
+    <string name="pro_history_exceptions_only">Solo eccezioni</string>
+    <string name="pro_history_tools">Sblocca gli strumenti completi della cronologia</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

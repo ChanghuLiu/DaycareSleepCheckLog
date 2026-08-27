@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Daycare Pro अनलॉक करें</string>
+    <string name="pro_screen_subtitle">व्यवस्थित और निरीक्षण के लिए तैयार बाल देखभाल रिकॉर्ड के लिए संपूर्ण टूल।</string>
+    <string name="pro_benefit_unlimited_rooms">असीमित कमरे</string>
+    <string name="pro_benefit_unlimited_rooms_description">हर बाल देखभाल कमरे का प्रबंधन करें।</string>
+    <string name="pro_benefit_pdf">निरीक्षण के लिए तैयार PDF रिपोर्ट</string>
+    <string name="pro_benefit_pdf_description">समय और स्टाफ संदर्भ सहित स्पष्ट रिकॉर्ड निर्यात करें।</string>
+    <string name="pro_benefit_history">पूर्ण इतिहास टूल</string>
+    <string name="pro_benefit_history_description">रिकॉर्ड जल्दी खोजें और फ़िल्टर करें।</string>
+    <string name="pro_benefit_backup">बैकअप और पुनर्स्थापना</string>
+    <string name="pro_benefit_backup_description">जब चाहें मैन्युअल प्रति रखें।</string>
+    <string name="pro_benefit_playground">खेल मैदान सुरक्षा लॉग</string>
+    <string name="pro_benefit_playground_description">दैनिक सुरक्षा जाँच एक साथ रखें।</string>
+    <string name="pro_price_once">%1$s एक बार</string>
+    <string name="pro_lifetime_access">आजीवन उपयोग · कोई सदस्यता नहीं</string>
+    <string name="pro_unlock_cta">Pro अनलॉक करें — %1$s</string>
+    <string name="pro_restore_purchase">खरीद पुनर्स्थापित करें</string>
+    <string name="pro_footer">कोई सदस्यता नहीं। कोई विज्ञापन नहीं। आपके रिकॉर्ड डिवाइस पर रहते हैं।</string>
+    <string name="pro_price_unavailable">कीमत उपलब्ध नहीं</string>
+    <string name="pro_purchase_pending">खरीद लंबित है। Google Play द्वारा भुगतान की पुष्टि के बाद Pro खुलेगा।</string>
+    <string name="pro_purchase_canceled">खरीद रद्द की गई।</string>
+    <string name="pro_billing_unavailable">Google Play बिलिंग अभी उपलब्ध नहीं है। कनेक्शन मिलने पर फिर प्रयास करें।</string>
+    <string name="pro_purchase_failed">खरीद पूरी नहीं हो सकी। आपके रिकॉर्ड नहीं बदले।</string>
+    <string name="pro_purchase_restored">Google Play से खरीद स्थिति पुनर्स्थापित की गई।</string>
+    <string name="pro_history_search">इतिहास खोजें</string>
+    <string name="pro_history_exceptions_only">केवल अपवाद</string>
+    <string name="pro_history_tools">पूर्ण इतिहास टूल अनलॉक करें</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

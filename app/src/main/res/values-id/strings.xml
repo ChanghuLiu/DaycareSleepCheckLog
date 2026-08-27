@@ -92,7 +92,7 @@
     <string name="observed_by">Diamati oleh %1$s</string>
     <string name="correction_history">Riwayat koreksi</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">Tidak ada login, iklan, analitik, backend, kamera, lokasi, atau akses internet.</string>
+    <string name="app_privacy">Tidak ada akun, login, iklan, analitik, backend pengembang, kamera, atau akses lokasi. Pembelian opsional diproses oleh Google Play.</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">TERLAMBAT</string>
     <string name="pdf_on_time">TEPAT WAKTU</string>

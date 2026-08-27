@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">فتح Daycare Pro</string>
+    <string name="pro_screen_subtitle">أدوات متكاملة لسجلات رعاية أطفال منظمة وجاهزة للتفتيش.</string>
+    <string name="pro_benefit_unlimited_rooms">غرف غير محدودة</string>
+    <string name="pro_benefit_unlimited_rooms_description">إدارة كل غرف رعاية الأطفال.</string>
+    <string name="pro_benefit_pdf">تقارير PDF جاهزة للمفتش</string>
+    <string name="pro_benefit_pdf_description">تصدير سجلات واضحة مع الطوابع الزمنية وسياق الموظف.</string>
+    <string name="pro_benefit_history">أدوات السجل الكاملة</string>
+    <string name="pro_benefit_history_description">البحث في السجلات وتصفيتها بسرعة.</string>
+    <string name="pro_benefit_backup">النسخ الاحتياطي والاستعادة</string>
+    <string name="pro_benefit_backup_description">احتفظ بنسخة يدوية عندما تختار ذلك.</string>
+    <string name="pro_benefit_playground">سجل سلامة ساحة اللعب</string>
+    <string name="pro_benefit_playground_description">اجمع فحوصات السلامة اليومية معًا.</string>
+    <string name="pro_price_once">%1$s مرة واحدة</string>
+    <string name="pro_lifetime_access">وصول مدى الحياة · بلا اشتراك</string>
+    <string name="pro_unlock_cta">فتح Pro — %1$s</string>
+    <string name="pro_restore_purchase">استعادة الشراء</string>
+    <string name="pro_footer">لا اشتراك. لا إعلانات. تبقى سجلات رعاية أطفالك على جهازك.</string>
+    <string name="pro_price_unavailable">السعر غير متاح</string>
+    <string name="pro_purchase_pending">الشراء قيد الانتظار. يفتح Pro بعد تأكيد Google Play للدفع.</string>
+    <string name="pro_purchase_canceled">تم إلغاء الشراء.</string>
+    <string name="pro_billing_unavailable">فوترة Google Play غير متاحة حاليًا. حاول مرة أخرى عند الاتصال.</string>
+    <string name="pro_purchase_failed">تعذر إكمال الشراء. لم تتغير سجلاتك.</string>
+    <string name="pro_purchase_restored">تمت استعادة حالة الشراء من Google Play.</string>
+    <string name="pro_history_search">البحث في السجل</string>
+    <string name="pro_history_exceptions_only">الاستثناءات فقط</string>
+    <string name="pro_history_tools">فتح أدوات السجل الكاملة</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

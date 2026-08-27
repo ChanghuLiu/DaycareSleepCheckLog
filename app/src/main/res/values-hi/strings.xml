@@ -92,7 +92,7 @@
     <string name="observed_by">अवलोकनकर्ता: %1$s</string>
     <string name="correction_history">सुधार इतिहास</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">कोई लॉगिन, विज्ञापन, एनालिटिक्स, बैकएंड, कैमरा, स्थान या इंटरनेट एक्सेस नहीं।</string>
+    <string name="app_privacy">कोई खाता, लॉगिन, विज्ञापन, एनालिटिक्स, डेवलपर बैकएंड, कैमरा या स्थान एक्सेस नहीं। वैकल्पिक खरीद Google Play द्वारा संसाधित होती हैं।</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">देर से</string>
     <string name="pdf_on_time">समय पर</string>

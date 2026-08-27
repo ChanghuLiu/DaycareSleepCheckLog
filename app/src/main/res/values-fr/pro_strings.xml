@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Débloquer Daycare Pro</string>
+    <string name="pro_screen_subtitle">Des outils complets pour des dossiers de garde organisés et prêts pour l’inspection.</string>
+    <string name="pro_benefit_unlimited_rooms">Pièces illimitées</string>
+    <string name="pro_benefit_unlimited_rooms_description">Gérez chaque salle de garde.</string>
+    <string name="pro_benefit_pdf">Rapports PDF prêts pour l’inspection</string>
+    <string name="pro_benefit_pdf_description">Exportez des dossiers clairs avec horodatage et contexte du personnel.</string>
+    <string name="pro_benefit_history">Outils d’historique complets</string>
+    <string name="pro_benefit_history_description">Recherchez et filtrez rapidement les dossiers.</string>
+    <string name="pro_benefit_backup">Sauvegarde et restauration</string>
+    <string name="pro_benefit_backup_description">Conservez une copie manuelle quand vous le souhaitez.</string>
+    <string name="pro_benefit_playground">Journal de sécurité de la cour</string>
+    <string name="pro_benefit_playground_description">Regroupez les contrôles de sécurité quotidiens.</string>
+    <string name="pro_price_once">%1$s une fois</string>
+    <string name="pro_lifetime_access">Accès à vie · Sans abonnement</string>
+    <string name="pro_unlock_cta">Débloquer Pro — %1$s</string>
+    <string name="pro_restore_purchase">Restaurer l’achat</string>
+    <string name="pro_footer">Sans abonnement. Sans publicité. Vos dossiers restent sur votre appareil.</string>
+    <string name="pro_price_unavailable">Prix indisponible</string>
+    <string name="pro_purchase_pending">Achat en attente. Pro sera débloqué après confirmation du paiement par Google Play.</string>
+    <string name="pro_purchase_canceled">Achat annulé.</string>
+    <string name="pro_billing_unavailable">La facturation Google Play est momentanément indisponible. Réessayez une fois connecté.</string>
+    <string name="pro_purchase_failed">L’achat n’a pas abouti. Vos dossiers n’ont pas été modifiés.</string>
+    <string name="pro_purchase_restored">État de l’achat restauré depuis Google Play.</string>
+    <string name="pro_history_search">Rechercher dans l’historique</string>
+    <string name="pro_history_exceptions_only">Exceptions uniquement</string>
+    <string name="pro_history_tools">Débloquer les outils d’historique complets</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

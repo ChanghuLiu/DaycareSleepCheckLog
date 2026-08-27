@@ -5,6 +5,9 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.daycare.sleepcheck.log.data.*
+import com.daycare.sleepcheck.log.billing.BillingMessage
+import com.daycare.sleepcheck.log.billing.ProEntitlement
+import com.daycare.sleepcheck.log.billing.ProEntitlementRepository
 import com.daycare.sleepcheck.log.domain.JurisdictionDefaults
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +29,9 @@ data class SleepUiState(
     val preciseRemindersAvailable: Boolean = false,
     val notificationsAllowed: Boolean = true,
     val message: UiMessage? = null,
+    val proEntitlement: ProEntitlement = ProEntitlement.CHECKING,
+    val proPrice: String? = null,
+    val billingMessage: BillingMessage? = null,
 )
 
 enum class UiMessage { SETUP_SAVED, CHECK_SAVED, CORRECTION_SAVED, CHECKLIST_SAVED, BACKUP_CREATED, RESTORED, INVALID_BACKUP }
@@ -34,6 +40,7 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
     private val db = AppDatabase.create(app)
     private val repo = SleepRepository(db)
     private val reminderScheduler = ReminderScheduler(app)
+    private val proEntitlementRepository = ProEntitlementRepository(app)
     private val _uiState = MutableStateFlow(SleepUiState())
     val uiState: StateFlow<SleepUiState> = _uiState.asStateFlow()
 
@@ -47,6 +54,10 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { repo.history.collect { update { copy(history = it) } } }
         viewModelScope.launch { repo.corrections.collect { update { copy(corrections = it) } } }
         viewModelScope.launch { repo.checklist.collect { update { copy(checklist = it) } } }
+        viewModelScope.launch { proEntitlementRepository.entitlement.collect { value -> update { copy(proEntitlement = value) } } }
+        viewModelScope.launch { proEntitlementRepository.localizedPrice.collect { value -> update { copy(proPrice = value) } } }
+        viewModelScope.launch { proEntitlementRepository.message.collect { value -> update { copy(billingMessage = value) } } }
+        proEntitlementRepository.connect()
     }
 
     private fun update(change: SleepUiState.() -> SleepUiState) { _uiState.value = _uiState.value.change() }
@@ -101,7 +112,10 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
     fun refreshReminderStatus() {
         update { copy(remindersEnabled = reminderScheduler.enabled, preciseRemindersAvailable = reminderScheduler.preciseAvailable(), notificationsAllowed = reminderScheduler.notificationsAllowed()) }
     }
+    fun refreshProEntitlement() = proEntitlementRepository.refresh()
+    fun purchasePro(activity: android.app.Activity) = proEntitlementRepository.launchPurchase(activity)
+    fun clearBillingMessage() = proEntitlementRepository.clearMessage()
     fun reconcileReminders() = launch { reminderScheduler.rescheduleAll(db) }
     private fun launch(block: suspend () -> Unit) = viewModelScope.launch { block() }
-    override fun onCleared() { db.close(); super.onCleared() }
+    override fun onCleared() { proEntitlementRepository.close(); db.close(); super.onCleared() }
 }

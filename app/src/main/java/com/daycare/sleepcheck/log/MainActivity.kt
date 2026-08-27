@@ -40,6 +40,8 @@ class MainActivity : ComponentActivity() {
                     createPdf::launch,
                     ::setRemindersEnabled,
                     ::openPreciseReminderSettings,
+                    { viewModel.purchasePro(this@MainActivity) },
+                    viewModel::refreshProEntitlement,
                 )
             }
         }
@@ -55,6 +57,7 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         viewModel.refreshReminderStatus()
         viewModel.reconcileReminders()
+        viewModel.refreshProEntitlement()
     }
 
     private fun setRemindersEnabled(enabled: Boolean) {

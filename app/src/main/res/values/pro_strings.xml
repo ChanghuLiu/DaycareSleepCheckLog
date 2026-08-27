@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Unlock Daycare Pro</string>
+    <string name="pro_screen_subtitle">Complete tools for organized, inspection-ready childcare records.</string>
+    <string name="pro_benefit_unlimited_rooms">Unlimited rooms</string>
+    <string name="pro_benefit_unlimited_rooms_description">Manage every childcare room.</string>
+    <string name="pro_benefit_pdf">Inspector-ready PDF reports</string>
+    <string name="pro_benefit_pdf_description">Export clear records with timestamps and staff context.</string>
+    <string name="pro_benefit_history">Full history tools</string>
+    <string name="pro_benefit_history_description">Search and filter records quickly.</string>
+    <string name="pro_benefit_backup">Backup &amp; restore</string>
+    <string name="pro_benefit_backup_description">Keep a manual copy when you choose.</string>
+    <string name="pro_benefit_playground">Playground safety log</string>
+    <string name="pro_benefit_playground_description">Keep daily safety checks together.</string>
+    <string name="pro_price_once">%1$s once</string>
+    <string name="pro_lifetime_access">Lifetime access · No subscription</string>
+    <string name="pro_unlock_cta">Unlock Pro — %1$s</string>
+    <string name="pro_restore_purchase">Restore purchase</string>
+    <string name="pro_footer">No subscription. No ads. Your childcare records stay on your device.</string>
+    <string name="pro_price_unavailable">Price unavailable</string>
+    <string name="pro_purchase_pending">Purchase pending. Pro unlocks after Google Play confirms payment.</string>
+    <string name="pro_purchase_canceled">Purchase canceled.</string>
+    <string name="pro_billing_unavailable">Google Play billing is currently unavailable. Try again when connected.</string>
+    <string name="pro_purchase_failed">The purchase could not be completed. Your records were not changed.</string>
+    <string name="pro_purchase_restored">Purchase status restored from Google Play.</string>
+    <string name="pro_history_search">Search history</string>
+    <string name="pro_history_exceptions_only">Exceptions only</string>
+    <string name="pro_history_tools">Unlock full history tools</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

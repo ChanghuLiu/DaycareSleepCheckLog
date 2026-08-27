@@ -92,7 +92,7 @@
     <string name="observed_by">Osservato da %1$s</string>
     <string name="correction_history">Cronologia delle correzioni</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">Nessun accesso a login, pubblicità, analisi, backend, fotocamera, posizione o Internet.</string>
+    <string name="app_privacy">Nessun account, accesso, pubblicità, analisi, backend dello sviluppatore, fotocamera o posizione. Gli acquisti opzionali sono elaborati da Google Play.</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">IN RITARDO</string>
     <string name="pdf_on_time">IN ORARIO</string>

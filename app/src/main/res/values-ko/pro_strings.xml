@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Daycare Pro 잠금 해제</string>
+    <string name="pro_screen_subtitle">정리되고 검사에 대비된 보육 기록을 위한 완전한 도구입니다.</string>
+    <string name="pro_benefit_unlimited_rooms">무제한 방</string>
+    <string name="pro_benefit_unlimited_rooms_description">모든 보육실을 관리하세요.</string>
+    <string name="pro_benefit_pdf">검사에 대비한 PDF 보고서</string>
+    <string name="pro_benefit_pdf_description">타임스탬프와 직원 정보를 포함한 명확한 기록을 내보내세요.</string>
+    <string name="pro_benefit_history">전체 기록 도구</string>
+    <string name="pro_benefit_history_description">기록을 빠르게 검색하고 필터링하세요.</string>
+    <string name="pro_benefit_backup">백업 및 복원</string>
+    <string name="pro_benefit_backup_description">원할 때 수동 사본을 보관하세요.</string>
+    <string name="pro_benefit_playground">놀이터 안전 기록</string>
+    <string name="pro_benefit_playground_description">매일의 안전 점검을 함께 보관하세요.</string>
+    <string name="pro_price_once">%1$s 1회</string>
+    <string name="pro_lifetime_access">평생 이용 · 구독 없음</string>
+    <string name="pro_unlock_cta">Pro 잠금 해제 — %1$s</string>
+    <string name="pro_restore_purchase">구매 복원</string>
+    <string name="pro_footer">구독 없음. 광고 없음. 보육 기록은 기기에 보관됩니다.</string>
+    <string name="pro_price_unavailable">가격을 사용할 수 없음</string>
+    <string name="pro_purchase_pending">구매 대기 중입니다. Google Play가 결제를 확인하면 Pro가 잠금 해제됩니다.</string>
+    <string name="pro_purchase_canceled">구매가 취소되었습니다.</string>
+    <string name="pro_billing_unavailable">현재 Google Play 결제를 사용할 수 없습니다. 연결 후 다시 시도하세요.</string>
+    <string name="pro_purchase_failed">구매를 완료할 수 없습니다. 기록은 변경되지 않았습니다.</string>
+    <string name="pro_purchase_restored">Google Play에서 구매 상태를 복원했습니다.</string>
+    <string name="pro_history_search">기록 검색</string>
+    <string name="pro_history_exceptions_only">예외만</string>
+    <string name="pro_history_tools">전체 기록 도구 잠금 해제</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

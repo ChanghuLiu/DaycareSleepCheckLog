@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Buka Daycare Pro</string>
+    <string name="pro_screen_subtitle">Alat lengkap untuk catatan penitipan anak yang rapi dan siap diperiksa.</string>
+    <string name="pro_benefit_unlimited_rooms">Ruangan tanpa batas</string>
+    <string name="pro_benefit_unlimited_rooms_description">Kelola setiap ruangan penitipan anak.</string>
+    <string name="pro_benefit_pdf">Laporan PDF siap inspeksi</string>
+    <string name="pro_benefit_pdf_description">Ekspor catatan jelas dengan stempel waktu dan konteks staf.</string>
+    <string name="pro_benefit_history">Alat riwayat lengkap</string>
+    <string name="pro_benefit_history_description">Cari dan filter catatan dengan cepat.</string>
+    <string name="pro_benefit_backup">Cadangkan &amp; pulihkan</string>
+    <string name="pro_benefit_backup_description">Simpan salinan manual kapan pun Anda mau.</string>
+    <string name="pro_benefit_playground">Log keamanan taman bermain</string>
+    <string name="pro_benefit_playground_description">Simpan pemeriksaan keamanan harian bersama.</string>
+    <string name="pro_price_once">%1$s sekali</string>
+    <string name="pro_lifetime_access">Akses seumur hidup · Tanpa langganan</string>
+    <string name="pro_unlock_cta">Buka Pro — %1$s</string>
+    <string name="pro_restore_purchase">Pulihkan pembelian</string>
+    <string name="pro_footer">Tanpa langganan. Tanpa iklan. Catatan Anda tetap di perangkat.</string>
+    <string name="pro_price_unavailable">Harga tidak tersedia</string>
+    <string name="pro_purchase_pending">Pembelian tertunda. Pro terbuka setelah Google Play mengonfirmasi pembayaran.</string>
+    <string name="pro_purchase_canceled">Pembelian dibatalkan.</string>
+    <string name="pro_billing_unavailable">Penagihan Google Play sedang tidak tersedia. Coba lagi saat terhubung.</string>
+    <string name="pro_purchase_failed">Pembelian tidak dapat diselesaikan. Catatan Anda tidak berubah.</string>
+    <string name="pro_purchase_restored">Status pembelian dipulihkan dari Google Play.</string>
+    <string name="pro_history_search">Cari riwayat</string>
+    <string name="pro_history_exceptions_only">Hanya pengecualian</string>
+    <string name="pro_history_tools">Buka alat riwayat lengkap</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

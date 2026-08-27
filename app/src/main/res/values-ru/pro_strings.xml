@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Разблокировать Daycare Pro</string>
+    <string name="pro_screen_subtitle">Полный набор инструментов для организованных записей об уходе за детьми, готовых к проверке.</string>
+    <string name="pro_benefit_unlimited_rooms">Неограниченное число комнат</string>
+    <string name="pro_benefit_unlimited_rooms_description">Управляйте каждой комнатой для детей.</string>
+    <string name="pro_benefit_pdf">PDF-отчёты для проверки</string>
+    <string name="pro_benefit_pdf_description">Экспортируйте понятные записи с отметками времени и данными сотрудника.</string>
+    <string name="pro_benefit_history">Полные инструменты истории</string>
+    <string name="pro_benefit_history_description">Быстро ищите и фильтруйте записи.</string>
+    <string name="pro_benefit_backup">Резервное копирование и восстановление</string>
+    <string name="pro_benefit_backup_description">Сохраняйте ручную копию в нужный момент.</string>
+    <string name="pro_benefit_playground">Журнал безопасности игровой площадки</string>
+    <string name="pro_benefit_playground_description">Храните ежедневные проверки безопасности вместе.</string>
+    <string name="pro_price_once">%1$s единоразово</string>
+    <string name="pro_lifetime_access">Пожизненный доступ · Без подписки</string>
+    <string name="pro_unlock_cta">Разблокировать Pro — %1$s</string>
+    <string name="pro_restore_purchase">Восстановить покупку</string>
+    <string name="pro_footer">Без подписки. Без рекламы. Записи остаются на вашем устройстве.</string>
+    <string name="pro_price_unavailable">Цена недоступна</string>
+    <string name="pro_purchase_pending">Покупка ожидает подтверждения. Pro откроется после подтверждения оплаты Google Play.</string>
+    <string name="pro_purchase_canceled">Покупка отменена.</string>
+    <string name="pro_billing_unavailable">Оплата Google Play сейчас недоступна. Повторите попытку при подключении.</string>
+    <string name="pro_purchase_failed">Не удалось завершить покупку. Записи не изменены.</string>
+    <string name="pro_purchase_restored">Статус покупки восстановлен из Google Play.</string>
+    <string name="pro_history_search">Поиск в истории</string>
+    <string name="pro_history_exceptions_only">Только исключения</string>
+    <string name="pro_history_tools">Разблокировать все инструменты истории</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+    <string name="pro_screen_title">Daycare Pro freischalten</string>
+    <string name="pro_screen_subtitle">Umfassende Werkzeuge für organisierte, prüfbereite Betreuungsaufzeichnungen.</string>
+    <string name="pro_benefit_unlimited_rooms">Unbegrenzte Räume</string>
+    <string name="pro_benefit_unlimited_rooms_description">Verwalten Sie jeden Betreuungsraum.</string>
+    <string name="pro_benefit_pdf">Prüfbereite PDF-Berichte</string>
+    <string name="pro_benefit_pdf_description">Exportieren Sie klare Aufzeichnungen mit Zeitstempeln und Betreuungskontext.</string>
+    <string name="pro_benefit_history">Vollständige Verlaufswerkzeuge</string>
+    <string name="pro_benefit_history_description">Suchen und filtern Sie Aufzeichnungen schnell.</string>
+    <string name="pro_benefit_backup">Sicherung &amp; Wiederherstellung</string>
+    <string name="pro_benefit_backup_description">Bewahren Sie bei Bedarf eine manuelle Kopie auf.</string>
+    <string name="pro_benefit_playground">Spielplatz-Sicherheitsprotokoll</string>
+    <string name="pro_benefit_playground_description">Bewahren Sie tägliche Sicherheitsprüfungen zusammen auf.</string>
+    <string name="pro_price_once">%1$s einmalig</string>
+    <string name="pro_lifetime_access">Lebenslanger Zugriff · Kein Abonnement</string>
+    <string name="pro_unlock_cta">Pro freischalten — %1$s</string>
+    <string name="pro_restore_purchase">Kauf wiederherstellen</string>
+    <string name="pro_footer">Kein Abonnement. Keine Werbung. Ihre Aufzeichnungen bleiben auf Ihrem Gerät.</string>
+    <string name="pro_price_unavailable">Preis nicht verfügbar</string>
+    <string name="pro_purchase_pending">Kauf ausstehend. Pro wird nach Zahlungsbestätigung durch Google Play freigeschaltet.</string>
+    <string name="pro_purchase_canceled">Kauf abgebrochen.</string>
+    <string name="pro_billing_unavailable">Google-Play-Abrechnung ist derzeit nicht verfügbar. Versuchen Sie es später erneut.</string>
+    <string name="pro_purchase_failed">Der Kauf konnte nicht abgeschlossen werden. Ihre Aufzeichnungen wurden nicht geändert.</string>
+    <string name="pro_purchase_restored">Kaufstatus aus Google Play wiederhergestellt.</string>
+    <string name="pro_history_search">Verlauf durchsuchen</string>
+    <string name="pro_history_exceptions_only">Nur Ausnahmen</string>
+    <string name="pro_history_tools">Vollständige Verlaufswerkzeuge freischalten</string>
+    <string name="open_daycare_pro">Daycare Pro</string>
+</resources>

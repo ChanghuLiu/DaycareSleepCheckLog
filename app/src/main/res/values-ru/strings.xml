@@ -92,7 +92,7 @@
     <string name="observed_by">Наблюдатель: %1$s</string>
     <string name="correction_history">История исправлений</string>
     <string name="correction_entry">%1$s · %2$s</string>
-    <string name="app_privacy">Нет входа, рекламы, аналитики, серверной части, камеры, геолокации или доступа к Интернету.</string>
+    <string name="app_privacy">Нет аккаунта, входа, рекламы, аналитики, серверной части разработчика, камеры или доступа к геолокации. Необязательные покупки обрабатывает Google Play.</string>
     <string name="pdf_title" translatable="false">Daycare Sleep Check Log</string>
     <string name="pdf_late">С ОПОЗДАНИЕМ</string>
     <string name="pdf_on_time">ВОВРЕМЯ</string>
