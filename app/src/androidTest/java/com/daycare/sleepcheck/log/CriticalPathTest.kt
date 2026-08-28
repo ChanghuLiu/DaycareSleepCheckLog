@@ -1,6 +1,7 @@
 package com.daycare.sleepcheck.log
 
 import androidx.compose.ui.test.*
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -36,15 +37,18 @@ class CriticalPathTest {
         }
         composeRule.onNodeWithText("Start sleep session").performClick()
         composeRule.onNodeWithText("Whole-room check").assertExists()
-        composeRule.onNodeWithContentDescription("I was physically present and completed a direct visual check of every sleeping child.").performClick()
-        composeRule.onNodeWithContentDescription("Exception observed").performClick()
-        composeRule.onNodeWithText("Complete check").performClick()
+        composeRule.onNodeWithContentDescription("I was physically present and completed a direct visual check of every sleeping child.").performScrollTo().performClick()
+        composeRule.onNodeWithContentDescription("I was physically present and completed a direct visual check of every sleeping child.").assertIsOn()
+        composeRule.onNodeWithContentDescription("Exception observed").performScrollTo().performClick()
+        composeRule.onNodeWithContentDescription("Exception observed").assertIsOn()
+        composeRule.onNodeWithText("Complete check").assertIsEnabled()
+        composeRule.onNodeWithText("Complete check").performSemanticsAction(SemanticsActions.OnClick)
         composeRule.waitUntil(timeoutMillis = 5_000) {
             composeRule.onAllNodes(hasText("Check saved", substring = true)).fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNode(hasText("Check saved", substring = true)).assertExists()
-        composeRule.onNodeWithText("Active sleep sessions").assertExists()
-        composeRule.onNodeWithText("Open inspector history").performClick()
+        composeRule.onNodeWithText("Active sleep session").assertExists()
+        composeRule.onNodeWithText("History").performClick()
         composeRule.onNodeWithText("Inspector history").assertExists()
     }
 }

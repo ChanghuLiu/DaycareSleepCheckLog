@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.compose.foundation)
+    implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)

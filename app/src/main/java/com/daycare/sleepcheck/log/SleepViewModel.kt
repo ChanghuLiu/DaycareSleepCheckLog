@@ -52,6 +52,8 @@ enum class UiMessageType {
     BACKUP_CREATED,
     RESTORED,
     INVALID_BACKUP,
+    PDF_EXPORTED,
+    PDF_EXPORT_FAILED,
     MISSING_STAFF,
     SESSION_MISSING,
     CONFIRMATION_REQUIRED,
@@ -161,14 +163,19 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
     fun exportPdfTo(uri: Uri) = launch {
-        val state = _uiState.value
-        PdfExporter(getApplication(), getApplication<Application>().contentResolver).write(
-            uri,
-            state.facility,
-            state.rooms,
-            state.staff,
-            state.history,
-        )
+        try {
+            val state = _uiState.value
+            PdfExporter(getApplication(), getApplication<Application>().contentResolver).write(
+                uri,
+                state.facility,
+                state.rooms,
+                state.staff,
+                state.history,
+            )
+            postMessage(UiMessage(UiMessageType.PDF_EXPORTED))
+        } catch (_: Exception) {
+            postMessage(UiMessage(UiMessageType.PDF_EXPORT_FAILED))
+        }
     }
     fun defaultInterval(profile: JurisdictionProfile): Int? = JurisdictionDefaults.intervalFor(profile)
     fun openSessionFromReminder(sessionId: String?, fromReminder: Boolean = false) {
@@ -187,6 +194,8 @@ class SleepViewModel(app: Application) : AndroidViewModel(app) {
     fun refreshProEntitlement() = proEntitlementRepository.refresh()
     fun purchasePro(activity: android.app.Activity) = proEntitlementRepository.launchPurchase(activity)
     fun clearBillingMessage() = proEntitlementRepository.clearMessage()
+
+
     fun reconcileReminders() = launch { reminderScheduler.rescheduleAll(db) }
     private fun launch(block: suspend () -> Unit) = viewModelScope.launch { block() }
     override fun onCleared() { proEntitlementRepository.close(); db.close(); super.onCleared() }
