@@ -1,5 +1,33 @@
 import java.io.FileInputStream
 import java.util.Properties
+import org.gradle.api.DefaultTask
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.TaskAction
+
+abstract class VerifyApplicationIdsTask : DefaultTask() {
+    @get:Input
+    abstract val productionApplicationId: Property<String>
+
+    @get:Input
+    abstract val debugApplicationId: Property<String>
+
+    @get:Input
+    abstract val releaseApplicationId: Property<String>
+
+    @TaskAction
+    fun verify() {
+        check(productionApplicationId.get() == "com.daycare.sleepcheck.log") {
+            "Unexpected production application ID: ${productionApplicationId.get()}"
+        }
+        check(debugApplicationId.get() == "com.daycare.sleepcheck.log.debug") {
+            "Unexpected debug application ID: ${debugApplicationId.get()}"
+        }
+        check(releaseApplicationId.get() == "com.daycare.sleepcheck.log") {
+            "Release must retain the production application ID"
+        }
+    }
+}
 
 private val releaseSigningPropertiesFile =
     File(System.getProperty("user.home"), ".config/daycare-sleep-check-log/signing.properties")
@@ -57,6 +85,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+        }
         release {
             isDebuggable = false
             if (releaseOperationRequested) {
@@ -70,6 +101,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
+}
+
+val configuredProductionId = android.defaultConfig.applicationId
+    ?: error("Production application ID must be configured")
+val configuredDebugId = configuredProductionId + android.buildTypes.getByName("debug").applicationIdSuffix.orEmpty()
+val configuredReleaseId = configuredProductionId + android.buildTypes.getByName("release").applicationIdSuffix.orEmpty()
+
+tasks.register<VerifyApplicationIdsTask>("verifyApplicationIds") {
+    productionApplicationId.set(configuredProductionId)
+    debugApplicationId.set(configuredDebugId)
+    releaseApplicationId.set(configuredReleaseId)
 }
 
 dependencies {
