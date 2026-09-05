@@ -4,16 +4,29 @@ import java.util.Properties
 private val releaseSigningPropertiesFile =
     File(System.getProperty("user.home"), ".config/daycare-sleep-check-log/signing.properties")
 
-check(releaseSigningPropertiesFile.isFile) {
-    "Release signing requires the secure file at ${releaseSigningPropertiesFile.absolutePath}"
+private val releaseOperationRequested = gradle.startParameter.taskNames.any { taskName ->
+    when {
+        taskName.substringAfterLast(':').contains("release", ignoreCase = true) -> true
+        taskName.substringAfterLast(':').equals("assemble", ignoreCase = true) -> true
+        taskName.substringAfterLast(':').equals("bundle", ignoreCase = true) -> true
+        taskName.substringAfterLast(':').equals("build", ignoreCase = true) -> true
+        else -> false
+    }
 }
 
-private val releaseSigningProperties = Properties().also { properties ->
-    FileInputStream(releaseSigningPropertiesFile).use(properties::load)
+private val releaseSigningProperties = if (releaseOperationRequested) {
+    check(releaseSigningPropertiesFile.isFile) {
+        "Release signing requires the secure file at ${releaseSigningPropertiesFile.absolutePath}"
+    }
+    Properties().also { properties ->
+        FileInputStream(releaseSigningPropertiesFile).use(properties::load)
+    }
+} else {
+    null
 }
 
 private fun requiredReleaseSigningProperty(name: String): String =
-    releaseSigningProperties.getProperty(name)?.takeIf { it.isNotBlank() }
+    releaseSigningProperties?.getProperty(name)?.takeIf { it.isNotBlank() }
         ?: error("Missing release signing property: $name")
 
 plugins {
@@ -34,17 +47,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
-        create("release") {
-            storeFile = file(requiredReleaseSigningProperty("storeFile"))
-            storePassword = requiredReleaseSigningProperty("storePassword")
-            keyAlias = requiredReleaseSigningProperty("keyAlias")
-            keyPassword = requiredReleaseSigningProperty("keyPassword")
+        if (releaseOperationRequested) {
+            create("release") {
+                storeFile = file(requiredReleaseSigningProperty("storeFile"))
+                storePassword = requiredReleaseSigningProperty("storePassword")
+                keyAlias = requiredReleaseSigningProperty("keyAlias")
+                keyPassword = requiredReleaseSigningProperty("keyPassword")
+            }
         }
     }
     buildTypes {
         release {
             isDebuggable = false
-            signingConfig = signingConfigs.getByName("release")
+            if (releaseOperationRequested) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     buildFeatures { compose = true; buildConfig = true }

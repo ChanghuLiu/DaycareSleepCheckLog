@@ -21,7 +21,7 @@ class RoomPersistenceTest {
     @After fun tearDown() { db.close() }
     @Test fun facilityPeopleSessionAndRecordPersist() = runBlocking {
         val repo = SleepRepository(db)
-        repo.saveSetup("Test Daycare", "Nap Room", "A. Staff", "Child One", JurisdictionProfile.ONTARIO, 15)
+        repo.saveSetup(MockTestFixtures.facility, MockTestFixtures.room, MockTestFixtures.staff, MockTestFixtures.firstChild, JurisdictionProfile.ONTARIO, MockTestFixtures.intervalMinutes.toInt())
         val room = db.peopleDao().allRooms().single()
         val staff = db.peopleDao().allStaff().single()
         val session = repo.startSession(room.id)
@@ -35,6 +35,6 @@ class RoomPersistenceTest {
         assertTrue(completion.record.isLate)
         assertEquals(ReminderScheduling.afterCompletedCheck(sessionEntity.startedAt, sessionEntity.intervalMinutes, 1), completion.nextScheduledAt)
         assertTrue(db.sleepDao().session(session)!!.active)
-        assertEquals("Test Daycare", db.facilityDao().get()?.name)
+        assertEquals(MockTestFixtures.facility, db.facilityDao().get()?.name)
     }
 }
