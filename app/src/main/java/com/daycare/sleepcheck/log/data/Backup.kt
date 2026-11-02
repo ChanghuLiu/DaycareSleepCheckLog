@@ -2,6 +2,7 @@ package com.daycare.sleepcheck.log.data
 
 import android.content.ContentResolver
 import android.net.Uri
+import androidx.room.withTransaction
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -35,15 +36,21 @@ class BackupManager(private val resolver: ContentResolver, private val db: AppDa
             ?: error("Unable to read backup")
         require(BackupManifestValidator.isValid(text))
         val data = JSONObject(text).getJSONObject("data")
-        db.clearAllTables()
-        data.array("facilities").forEach { db.facilityDao().insert(it.facility()) }
-        data.array("rooms").forEach { db.peopleDao().insertRoom(it.room()) }
-        data.array("staff").forEach { db.peopleDao().insertStaff(it.staff()) }
-        data.array("children").forEach { db.peopleDao().insertChild(it.child()) }
-        data.array("sessions").forEach { db.sleepDao().insertSessionForRestore(it.session()) }
-        data.array("records").forEach { db.sleepDao().insertRecordForRestore(it.record()) }
-        data.array("corrections").forEach { db.auditDao().insertForRestore(it.correction()) }
-        data.array("checklists").forEach { db.checklistDao().insertForRestore(it.checklist()) }
+        restoreData(data)
+    }
+
+    internal suspend fun restoreData(data: JSONObject) {
+        db.withTransaction {
+            db.clearAllTables()
+            data.array("facilities").forEach { db.facilityDao().insert(it.facility()) }
+            data.array("rooms").forEach { db.peopleDao().insertRoom(it.room()) }
+            data.array("staff").forEach { db.peopleDao().insertStaff(it.staff()) }
+            data.array("children").forEach { db.peopleDao().insertChild(it.child()) }
+            data.array("sessions").forEach { db.sleepDao().insertSessionForRestore(it.session()) }
+            data.array("records").forEach { db.sleepDao().insertRecordForRestore(it.record()) }
+            data.array("corrections").forEach { db.auditDao().insertForRestore(it.correction()) }
+            data.array("checklists").forEach { db.checklistDao().insertForRestore(it.checklist()) }
+        }
     }
 
     private suspend fun collect(): JSONObject = JSONObject().apply {

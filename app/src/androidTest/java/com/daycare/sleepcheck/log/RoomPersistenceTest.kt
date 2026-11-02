@@ -3,7 +3,6 @@ package com.daycare.sleepcheck.log
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.daycare.sleepcheck.log.data.*
 import com.daycare.sleepcheck.log.domain.ReminderScheduling
 import kotlinx.coroutines.runBlocking
@@ -12,9 +11,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
 class RoomPersistenceTest {
     private lateinit var db: AppDatabase
     @Before fun setUp() { db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), AppDatabase::class.java).allowMainThreadQueries().build() }
@@ -36,5 +33,33 @@ class RoomPersistenceTest {
         assertEquals(ReminderScheduling.afterCompletedCheck(sessionEntity.startedAt, sessionEntity.intervalMinutes, 1), completion.nextScheduledAt)
         assertTrue(db.sleepDao().session(session)!!.active)
         assertEquals(MockTestFixtures.facility, db.facilityDao().get()?.name)
+    }
+
+    @Test fun malformedBackupRollsBackExistingLocalData() = runBlocking {
+        db.facilityDao().insert(FacilityEntity("existing", "Existing Facility", "CUSTOM", 10, 1L))
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val data = org.json.JSONObject().apply {
+            put("facilities", org.json.JSONArray().put(org.json.JSONObject().apply {
+                put("id", "new")
+                put("name", "New")
+                put("jurisdiction", "CUSTOM")
+                put("intervalMinutes", "bad")
+                put("createdAt", 2L)
+            }))
+            put("rooms", org.json.JSONArray())
+            put("staff", org.json.JSONArray())
+            put("children", org.json.JSONArray())
+            put("sessions", org.json.JSONArray())
+            put("records", org.json.JSONArray())
+            put("corrections", org.json.JSONArray())
+            put("checklists", org.json.JSONArray())
+        }
+        try {
+            BackupManager(context.contentResolver, db).restoreData(data)
+            throw AssertionError("Malformed backup unexpectedly restored")
+        } catch (_: org.json.JSONException) {
+            // Expected: malformed value fails after clear, and Room rolls back the transaction.
+        }
+        assertEquals(listOf("Existing Facility"), db.facilityDao().all().map { it.name })
     }
 }
